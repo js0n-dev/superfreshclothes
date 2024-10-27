@@ -1,0 +1,458 @@
+<link rel="stylesheet" href="{{ 'component-menu-popup.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-menu-popup.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- if section.settings.icons_menu != blank -%}
+    <div class="menu-popup-wrapper{% if section.settings.align_popup_menu %} menu-popup-wrapper--align{% endif %} small-hide medium-hide">
+        {% comment %}
+        <nav class="header__menu-popup">
+            <ul class="list-menu" role="list">
+                {%- for link in section.settings.icons_menu.links -%}
+                    {%- assign icon_svg_property = 'item_icon_svg_' | append: forloop.index -%}
+                    {%- assign icon_image_property = 'item_icon_image_' | append: forloop.index -%}
+                    {%- assign icon = blank -%}
+                    {%- if menu_icons.settings[icon_image_property] != blank -%}
+                        {% capture icon %}
+                            <span class="media" style="padding-bottom: {{ 1 | divided_by: menu_icons.settings[icon_image_property].aspect_ratio | times: 100 }}%;">
+                            <img srcset="{{ menu_icons.settings[icon_image_property] | img_url: '40x' }} 1x, {{ menu_icons.settings[icon_image_property] | img_url: '40x', scale: 2 }} 2x"
+                                src="{{ menu_icons.settings[icon_image_property] | img_url: '40x' }}"
+                                loading="lazy"
+                                alt="{{ menu_icons.settings[icon_image_property].alt | default: shop.name | escape }}"
+                                style="object-position: {{ menu_icons.settings[icon_image_property].presentation.focal_point }};"
+                            >
+                            </span>
+                        {% endcapture %}
+                    {%- elsif menu_icons.settings[icon_svg_property] != blank -%}
+                        {% capture icon_svg_snippet %}icon-theme-{{ menu_icons.settings[icon_svg_property] }}{% endcapture %}
+                        {% capture icon %}
+                            {% include icon_svg_snippet %}
+                        {% endcapture %}
+                        {%- if icon contains 'Liquid error' -%}
+                            {%- assign icon = blank -%}
+                        {%- endif -%}
+                    {%- endif -%}
+                    <li>
+                    {%- if link.links != blank -%}
+                        {%- assign item_is_link = false -%}
+                        <popup-menu-dropdown>
+                            <details-disclosure>
+                                <details id="Details-HeaderIconsMenu-{{ link.title | escape }}-{{ forloop.index }}">
+                                    <summary data-menu-button class="header__menu-popup-item gradient focus-inset" data-action="hover">
+                                        {%- unless section.settings.open_onclick and link.url != blank -%}
+                                            <a href="{{ link.url }}" class="header__menu-popup-item-inner no-js-hidden" tabindex="-1">
+                                                {%- if icon != blank -%}
+                                                    <span class="header__menu-popup-item-icon">
+                                                        {{ icon }}
+                                                    </span>
+                                                {%- endif -%}
+                                                <span class="header__menu-popup-item-text header__menu-popup-item-text--has-arrow{%- if link.child_active %} header__active-menu-popup-item{% endif %}">{{ link.title | escape }}</span>
+                                                {% render 'menu-badge' with badges_key_value: badges_key_value link: link %}
+                                                {% render 'icon-caret' %}
+                                            </a>
+                                            {%- assign item_is_link = true -%}
+                                        {%- endunless -%}
+                                        <div class="header__menu-popup-item-inner{% if item_is_link == true %} js-hidden{% endif %}">
+                                            {%- if icon != blank -%}
+                                                <span class="header__menu-popup-item-icon">
+                                                    {{ icon }}
+                                                </span>
+                                            {%- endif -%}
+                                            <span class="header__menu-popup-item-text header__menu-popup-item-text--has-arrow{%- if link.child_active %} header__active-menu-popup-item{% endif %}">{{ link.title | escape }}</span>
+                                            {% render 'menu-badge' with badges_key_value: badges_key_value link: link %}
+                                            {% render 'icon-caret' %}
+                                        </div>
+                                    </summary>
+                                    <ul id="HeaderIconsMenu-MenuList-{{ link.title | escape }}-{{ forloop.index }}" class="header__submenu list-menu list-menu--disclosure gradient caption-large motion-reduce" role="list" tabindex="-1">
+                                        {%- for childlink in link.links -%}
+                                            <li>
+                                                {%- if childlink.links == blank -%}
+                                                    <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>{{ childlink.title | escape }}{% render 'menu-badge' with badges_key_value: badges_key_value link: link childlink: childlink %}</span>
+                                                    </a>
+                                                    {%- else -%}
+                                                    <details id="Details-HeaderSubIconsMenu--{{ link.title | escape }}-{{ childlink.title | escape }}-{{ forloop.index }}">
+                                                        <summary class="header__menu-item link link--text list-menu__item focus-inset caption-large">
+                                                            <span data-url="{{ childlink.url }}">{{ childlink.title | escape }}{% render 'menu-badge' with badges_key_value: badges_key_value link: link childlink: childlink %}</span>
+                                                            {% render 'icon-caret' %}
+                                                        </summary>
+                                                        <ul id="HeaderIconsMenu-SubMenuList-{{ link.title | escape }}-{{ childlink.title | escape }}-{{ forloop.index }}" class="header__submenu list-menu gradient motion-reduce">
+                                                            {%- for grandchildlink in childlink.links -%}
+                                                                <li>
+                                                                    <a href="{{ grandchildlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if grandchildlink.current %} list-menu__item--active{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                                                                        <span>{{ grandchildlink.title | escape }}{% render 'menu-badge' with badges_key_value: badges_key_value link: link childlink: childlink grandchildlink: grandchildlink %}</span>
+                                                                    </a>
+                                                                </li>
+                                                            {%- endfor -%}
+                                                            {% render 'menu-popup-banner', link: link, childlink: childlink %}
+                                                        </ul>
+                                                    </details>
+                                                {%- endif -%}
+                                            </li>
+                                        {%- endfor -%}
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ childlink.url }}" class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if childlink.current %} list-menu__item--active{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+                                                        <span>Item</span>
+                                                    </a>
+                                        </li>
+                                        {% render 'menu-popup-banner', link: link %}
+                                    </ul>
+                                </details>
+                            </details-disclosure>
+                        </popup-menu-dropdown>
+                    {%- else -%}
+                        <a href="{{ link.url }}" data-menu-button class="header__menu-popup-item gradient focus-inset"{% if link.current %} aria-current="page"{% endif %} data-action="hover">
+                            {%- if icon != blank -%}  
+                                <span class="header__menu-popup-item-icon">
+                                    {{ icon }}
+                                </span>
+                            {%- endif -%}
+                            <span class="header__menu-popup-item-text{% if link.current %} header__active-menu-popup-item{% endif %}">{{ link.title | escape }}</span>
+                            {% render 'menu-badge' with badges_key_value: badges_key_value link: link %}
+                        </a>
+                    {%- endif -%}
+                    </li>
+                {%- endfor -%}
+            </ul>
+        </nav>
+        {% endcomment %}
+
+        {%- assign blocks_menu_popup = section.blocks | where: 'type', 'menu_popup' -%}
+        <div class="popup-menu-wrapper" id="jsPopupMenuWrapper">
+            <div class="page-width">
+                <div class="popup-menu{% if section.settings.popup_menu_fullwidth %} popup-menu--fullwidth{% endif %} popup-menu-scroll" id="jsPopupMenu">
+                    <ul class="popup-menu__list popup-menu-scroll">
+                        
+                        {%- comment %}<locksmith:5b6e>{% endcomment -%}
+                          {%- assign locksmith_82c9_forloop__size = 0 %}{%- for link in section.settings.icons_menu.links -%}{% capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: section.settings.icons_menu, variable: 'transparent' %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_82c9_forloop__size = locksmith_82c9_forloop__size | plus: 1 %}{% endif %}{% endfor %}{% assign locksmith_82c9_forloop__index = nil -%}
+                        {%- comment %}</locksmith:5b6e>{% endcomment -%}
+                        {%- for link in section.settings.icons_menu.links -%}
+
+                            {%- comment %}<locksmith:1838>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: section.settings.icons_menu, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% if locksmith_82c9_forloop__index == nil %}{% assign locksmith_82c9_forloop__index = 1 %}{% assign locksmith_82c9_forloop__index0 = 0 %}{% else %}{% assign locksmith_82c9_forloop__index = locksmith_82c9_forloop__index | plus: 1 %}{% assign locksmith_82c9_forloop__index0 = locksmith_82c9_forloop__index0 | plus: 1 %}{% endif %}{% if locksmith_82c9_forloop__index == 1 %}{% assign locksmith_82c9_forloop__first = true %}{% else %}{% assign locksmith_82c9_forloop__first = false %}{% endif %}{% if locksmith_82c9_forloop__index == locksmith_82c9_forloop__size %}{% assign locksmith_82c9_forloop__last = true %}{% else %}{% assign locksmith_82c9_forloop__last = false %}{% endif %}{% assign locksmith_82c9_forloop__rindex = locksmith_82c9_forloop__size | minus: locksmith_82c9_forloop__index | minus: 1 %}{% assign locksmith_82c9_forloop__rindex0 = locksmith_82c9_forloop__size | minus: locksmith_82c9_forloop__index0 | minus: 1 %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:1838>{% endcomment -%}
+
+                            {%- assign current_link_block = null -%}
+                            {%- for block in blocks_menu_popup -%}
+                                {%- comment %}<locksmith:fc4e>{% endcomment -%}
+                                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                {%- comment %}</locksmith:fc4e>{% endcomment -%}
+                                {%- if block.settings.link_title == blank -%}
+                                    {%- continue -%}
+                                {%- else -%}
+                                    {% capture link_title_join %}{{ link.title }}{% if childlink != blank %}+{{ childlink.title }}{% endif %}{% endcapture %}
+                                    {%- if block.settings.link_title != link_title_join -%}
+                                        {%- continue -%}
+                                    {%- endif -%}
+                                    {%- assign current_link_block = block -%}
+                                {%- endif -%}
+                            {%- endfor -%}
+
+                            {%- assign icon_svg_property = 'item_icon_svg_' | append: forloop.index -%}
+                            {%- assign icon_image_property = 'item_icon_image_' | append: forloop.index -%}
+                            {%- assign icon = blank -%}
+                            {%- if menu_icons.settings[icon_image_property] != blank -%}
+                                {% capture icon %}
+                                    <span class="media" style="padding-bottom: {{ 1 | divided_by: menu_icons.settings[icon_image_property].aspect_ratio | times: 100 }}%;">
+                                    <img srcset="{{ menu_icons.settings[icon_image_property] | img_url: '40x' }} 1x, {{ menu_icons.settings[icon_image_property] | img_url: '40x', scale: 2 }} 2x"
+                                        src="{{ menu_icons.settings[icon_image_property] | img_url: '40x' }}"
+                                        loading="lazy"
+                                        alt="{{ menu_icons.settings[icon_image_property].alt | default: shop.name | escape }}"
+                                        style="object-position: {{ menu_icons.settings[icon_image_property].presentation.focal_point }};"
+                                    >
+                                    </span>
+                                {% endcapture %}
+                            {%- elsif menu_icons.settings[icon_svg_property] != blank -%}
+                                {% capture icon_svg_snippet %}icon-theme-{{ menu_icons.settings[icon_svg_property] }}{% endcapture %}
+                                {% capture icon %}
+                                    {% include icon_svg_snippet %}
+                                {% endcapture %}
+                                {%- if icon contains 'Liquid error' -%}
+                                    {%- assign icon = blank -%}
+                                {%- endif -%}
+                            {%- endif -%}
+                            {%- assign has_popular = false -%}
+                            {%- if current_link_block.settings.populars_enable -%}
+                                {%- assign has_popular = true -%}
+                            {%- endif -%}
+                            {%- assign enable_submenu = false -%}
+                            {%- if link.links != blank or current_link_block.settings.image != blank or has_popular -%}
+                                {%- assign enable_submenu = true -%}
+                            {%- endif -%}
+                            {%- if has_popular -%}
+                                {%- assign submenu_level = 2 -%}
+                            {%- else -%}
+                                {%- assign submenu_level = 0 -%}
+                                {%- for childlink in link.links -%}
+                                    {%- comment %}<locksmith:493f>{% endcomment -%}
+                                      {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: childlink, subject_parent: link, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                    {%- comment %}</locksmith:493f>{% endcomment -%}
+                                    {%- assign submenu_level = submenu_level | at_least: 1 -%}
+                                    {%- for grandchildlink in childlink.links -%}
+                                        {%- comment %}<locksmith:26e5>{% endcomment -%}
+                                          {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: grandchildlink, subject_parent: childlink, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                        {%- comment %}</locksmith:26e5>{% endcomment -%}
+                                        {%- assign submenu_level = submenu_level | at_least: 2 -%}
+                                    {%- endfor -%}
+                                {%- endfor -%}
+                            {%- endif -%}
+                            <li class="popup-menu__list-item{% if enable_submenu %} popup-menu__has-submenu{% endif %}">
+                                <a class="popup-menu__link" href="{{ link.url }}">
+                                    {%- if icon != blank -%}  
+                                        <span class="popup-menu__link-icon">
+                                            {{ icon }}
+                                        </span>
+                                    {%- endif -%}
+                                    <span>{{ link.title | escape }}</span>
+                                    {% render 'menu-badge' with badges_key_value: badges_key_value link: link %}
+                                    {%- if enable_submenu -%}
+                                        {% render 'icon-caret' %}
+                                    {%- endif -%}
+                                </a>
+                                <div class="popup-menu__submenu popup-menu__submenu--has-{{ submenu_level }}-lvl{% if current_link_block.settings.image %} popup-menu__submenu--has-image{% endif %}">
+                                    <div class="popup-menu__submenu-list popup-menu-scroll">
+
+                                        {%- if has_popular -%}
+                                            <div class="popup-menu__submenu-item popup-menu__has-submenu active">
+                    
+                                                <a class="popup-menu__submenu-item-title" href="{{ current_link_block.settings.populars_link | default: link.url }}">
+                                                    <span>{{ current_link_block.settings.populars_title }}</span>
+                                                    {% render 'icon-caret' %}
+                                                </a>
+                                                <div class="popup-menu__submenu-item-list popup-menu__submenu-item-list--populars popup-menu__submenu-item-list--align-{{ current_link_block.settings.populars_vertical_align }} popup-menu-scroll">
+                    
+                                                    <div class="popup-menu-list-item popup-menu-list-item--one">
+                                                        {%- for i in (1..20) -%}
+                                                            {% capture populars_link_property %}populars_link_{{ i }}{% endcapture %}
+                                                            {% capture populars_image_property %}populars_image_{{ i }}{% endcapture %}
+                                                            {% capture populars_title_property %}populars_title_{{ i }}{% endcapture %}
+                                                            {% capture populars_text_property %}populars_text_{{ i }}{% endcapture %}
+                                                            {%- if current_link_block.settings[populars_image_property] == blank -%}
+                                                                {%- continue -%}
+                                                            {%- endif -%}
+                                                            <div class="popup-menu-list-item__category">
+                                                                {%- if current_link_block.settings[populars_title_property] != blank or current_link_block.settings[populars_text_property] != blank -%}
+                                                                    <div class="popup-menu-list-item__category-section">
+                                                                        <div class="popup-menu-list-item__link-title">
+                                                                            <a href="{{ current_link_block.settings[populars_link_property] | default: current_link_block.settings.populars_link | default: link.url }}">
+                                                                                <span>{{ current_link_block.settings[populars_title_property] }}</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="popup-menu-list-item__sublink">
+                                                                            {{ current_link_block.settings[populars_text_property] }}
+                                                                        </div>
+                                                                    </div>
+                                                                {%- endif -%}
+                                                                <a class="popup-menu-list-item__link-image" href="{{ current_link_block.settings[populars_link_property] | default: current_link_block.settings.populars_link | default: link.url }}">
+                                                                    <img class="lazy-loaded" srcset="
+                                                                        {%- if current_link_block.settings[populars_title_property] != blank or current_link_block.settings[populars_text_property] != blank -%}
+                                                                            {{ current_link_block.settings[populars_image_property] | img_url: '60x' }} 1x, 
+                                                                            {{ current_link_block.settings[populars_image_property] | img_url: '120x' }} 2x, 
+                                                                            {{ current_link_block.settings[populars_image_property] | img_url: '180x' }} 3x 
+                                                                        {%- else -%}
+                                                                            {{ current_link_block.settings[populars_image_property] | img_url: '240x' }} 1x, 
+                                                                            {{ current_link_block.settings[populars_image_property] | img_url: '480x' }} 2x, 
+                                                                            {{ current_link_block.settings[populars_image_property] | img_url: '720x' }} 3x 
+                                                                        {%- endif -%}
+                                                                        "
+                                                                        alt="{{ current_link_block.settings[populars_title_property] | default: current_link_block.settings[populars_image_property].alt | escape }}"
+                                                                        loading="lazy">
+                                                                </a>
+                                                            </div>
+                                                        {%- endfor -%}
+                                                    </div>
+                    
+                                                </div>
+                                            </div>
+                                        {%- endif -%}
+
+                                        {%- comment %}<locksmith:70ea>{% endcomment -%}
+                                          {%- assign locksmith_e1b1_forloop__size = 0 %}{%- for childlink in link.links -%}{% capture var %}{% render 'locksmith-variables', scope: 'subject', subject: childlink, subject_parent: link, variable: 'transparent' %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_e1b1_forloop__size = locksmith_e1b1_forloop__size | plus: 1 %}{% endif %}{% endfor %}{% assign locksmith_e1b1_forloop__index = nil -%}
+                                        {%- comment %}</locksmith:70ea>{% endcomment -%}
+                                        {%- for childlink in link.links -%}
+                                            {%- comment %}<locksmith:aa3c>{% endcomment -%}
+                                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: childlink, subject_parent: link, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% if locksmith_e1b1_forloop__index == nil %}{% assign locksmith_e1b1_forloop__index = 1 %}{% assign locksmith_e1b1_forloop__index0 = 0 %}{% else %}{% assign locksmith_e1b1_forloop__index = locksmith_e1b1_forloop__index | plus: 1 %}{% assign locksmith_e1b1_forloop__index0 = locksmith_e1b1_forloop__index0 | plus: 1 %}{% endif %}{% if locksmith_e1b1_forloop__index == 1 %}{% assign locksmith_e1b1_forloop__first = true %}{% else %}{% assign locksmith_e1b1_forloop__first = false %}{% endif %}{% if locksmith_e1b1_forloop__index == locksmith_e1b1_forloop__size %}{% assign locksmith_e1b1_forloop__last = true %}{% else %}{% assign locksmith_e1b1_forloop__last = false %}{% endif %}{% assign locksmith_e1b1_forloop__rindex = locksmith_e1b1_forloop__size | minus: locksmith_e1b1_forloop__index | minus: 1 %}{% assign locksmith_e1b1_forloop__rindex0 = locksmith_e1b1_forloop__size | minus: locksmith_e1b1_forloop__index0 | minus: 1 %}{% else %}{% continue %}{% endif -%}
+                                            {%- comment %}</locksmith:aa3c>{% endcomment -%}
+                                            <div class="popup-menu__submenu-item{% if childlink.links != blank %} popup-menu__has-submenu{% endif %}{% if has_popular != true and locksmith_e1b1_forloop__index == 1 %} active{% endif %}">
+                                                <a class="popup-menu__submenu-item-title" href="{{ childlink.url }}">
+                                                    <span>{{ childlink.title | escape }}</span>
+                                                    {% render 'menu-badge' with badges_key_value: badges_key_value link: link childlink: childlink %}
+                                                    {% if childlink.links != blank %}
+                                                        {% render 'icon-caret' %}
+                                                    {% endif %}
+                                                </a>
+
+                                                {%- if childlink.links != blank -%}
+                                                    <div class="popup-menu__submenu-item-list popup-menu-scroll">
+                                                        <div class="popup-menu-list-item popup-menu-list-item--two">
+                                                            {%- for grandchildlink in childlink.links -%}
+                                                                {%- comment %}<locksmith:c1dd>{% endcomment -%}
+                                                                  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: grandchildlink, subject_parent: childlink, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+                                                                {%- comment %}</locksmith:c1dd>{% endcomment -%}
+                                                                <div class="popup-menu-list-item__link">
+                                                                    <a href="{{ grandchildlink.url }}">
+                                                                        <span>{{ grandchildlink.title | escape }}</span>
+                                                                        {% render 'menu-badge' with badges_key_value: badges_key_value link: link childlink: childlink grandchildlink: grandchildlink %}
+                                                                    </a>
+                                                                </div>
+                                                            {%- endfor -%}
+                                                        </div>
+                                                    </div>
+                                                {%- endif -%}
+                                            </div>
+                                        {%- endfor -%}
+                                    </div>
+                
+                                    {%- if current_link_block.settings.image -%}
+                                        
+
+                                        <div class="popup-menu-image__wrap" data-block-id="{{ current_link_block.id }}" {{ current_link_block.shopify_attributes }}>
+                                            <div class="popup-menu-image__image">
+                                                <a class="popup-menu-image__link" href="{{ current_link_block.settings.link | default: link.url }}">
+                                                    <img
+                                                        srcset="
+                                                        {{ current_link_block.settings.image | img_url: '360x' }} 1x, 
+                                                        {{ current_link_block.settings.image | img_url: '720x' }} 2x, 
+                                                        {{ current_link_block.settings.image | img_url: '1080x' }} 3x" 
+                                                        src="{{ current_link_block.settings.image | img_url: '360x' }}"
+                                                        loading="lazy"
+                                                        alt="{{ link.title | default: current_link_block.settings.image.alt | escape }}"
+                                                        style="object-position: {{ current_link_block.settings.image.presentation.focal_point }};"
+                                                    >
+                                                </a>
+
+                                                <div class="popup-menu-image__content">
+                                                    {%- if current_link_block.settings.heading != blank -%}
+                                                        {%- if current_link_block.settings.heading_color.alpha > 0 -%}
+                                                            {%- style -%}
+                                                                .popup-menu-image__wrap[data-block-id="{{ current_link_block.id }}"] .popup-menu-image__heading {
+                                                                    --color-foreground: {{ current_link_block.settings.heading_color.red }}, {{ current_link_block.settings.heading_color.green }}, {{ current_link_block.settings.heading_color.blue }};
+                                                                }
+                                                            {%- endstyle -%}
+                                                        {%- endif -%}
+                                                        <span class="popup-menu-image__heading h1 headings-case">{{ current_link_block.settings.heading }}</span>
+                                                        {%- if current_link_block.settings.paragraph != blank -%}
+                                                            {%- if current_link_block.settings.paragraph_color.alpha > 0 -%}
+                                                                {%- style -%}
+                                                                    .popup-menu-image__wrap[data-block-id="{{ current_link_block.id }}"] .popup-menu-image__paragraph {
+                                                                        --color-foreground: {{ current_link_block.settings.paragraph_color.red }}, {{ current_link_block.settings.paragraph_color.green }}, {{ current_link_block.settings.paragraph_color.blue }};
+                                                                    }
+                                                                {%- endstyle -%}
+                                                            {%- endif -%}
+                                                            <span class="popup-menu-image__paragraph">{{ current_link_block.settings.paragraph }}</span>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%- endif -%}
+                                    
+                                </div>
+                            </li>
+                        {%- endfor -%}
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-menu-button js-popup-menu-button button">
+            {% render 'icon-categories' %}
+            {% render 'icon-close' %}
+            {{ 'sections.header.menu_popup' | t }}
+        </div>
+    </div>
+{%- endif -%}

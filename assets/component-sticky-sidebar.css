@@ -1,0 +1,21 @@
+@media screen and (min-width: 993px) {
+    .sticky-sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .sidebar-fixed-top [data-js-sticky-sidebar-body] {
+        position: fixed;
+        top: 15px;
+    }
+
+    .sidebar-static-bottom {
+        justify-content: flex-end;
+    }
+
+    .sidebar-fixed-bottom [data-js-sticky-sidebar-body] {
+        position: fixed;
+        bottom: 15px;
+    }
+}

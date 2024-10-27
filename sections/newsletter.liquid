@@ -1,0 +1,293 @@
+{{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
+{{ 'newsletter-section.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+{%- endstyle -%}
+
+<div id="NewsletterSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="page-width">
+    <div class="newsletter newsletter--narrow{% if section.settings.layout != 'in-grid-heading' %} newsletter--width-limit{% endif %}">
+      <div class="newsletter__wrapper section-{{ section.id }}-padding gradient">
+        <div class="grid-bs">
+          <div class="g-col-12{% if section.settings.layout == 'in-grid-heading' %} g-col-md-6{% endif %}">
+            <div class="heading-wrapper animated-appearance{% if section.settings.layout == 'heading-on-top-center' %} center{% endif %}">
+              <div class="heading-wrapper__heading newsletter__heading">
+                {%- for block in section.blocks -%}
+                  {%- case block.type -%}
+                    {%- when 'heading' -%}
+                      {%- if block.settings.heading_color.alpha > 0 -%}
+                        {%- style -%}
+                          #NewsletterSection-{{ section.id }} .newsletter .title {
+                            color: rgb({{ block.settings.heading_color.red }}, {{ block.settings.heading_color.green }}, {{ block.settings.heading_color.blue }});
+                          }
+                        {%- endstyle -%}
+                      {%- endif -%}
+                      <h2 class="title" {{ block.shopify_attributes }}>{{ block.settings.heading | escape }}</h2>
+                    {%- when 'paragraph' -%}
+                      {%- if block.settings.text_color.alpha > 0 -%}
+                        {%- style -%}
+                          #NewsletterSection-{{ section.id }} .newsletter__subheading {
+                            color: rgb({{ block.settings.text_color.red }}, {{ block.settings.text_color.green }}, {{ block.settings.text_color.blue }});
+                          }
+                        {%- endstyle -%}
+                      {%- endif -%}
+                      <div class="newsletter__subheading rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+                  {%- endcase -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+          <div class="g-col-12{% if section.settings.layout == 'in-grid-heading' %} g-col-md-6{% endif %}">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'email_form' -%}
+                  <div {{ block.shopify_attributes }}>
+                    {% form 'customer', class: 'newsletter-form animated-appearance' %}
+                      <input type="hidden" name="contact[tags]" value="newsletter">
+                      <div class="newsletter-form__field-wrapper">
+                        <div class="field field--with-icon">
+                          <input
+                            id="NewsletterForm--{{ section.id }}"
+                            type="email"
+                            name="contact[email]"
+                            class="field__input"
+                            value="{{ form.email }}"
+                            aria-required="true"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            autocomplete="email"
+                            {% if form.errors %}
+                              autofocus
+                              aria-invalid="true"
+                              aria-describedby="Newsletter-error--{{ section.id }}"
+                            {% elsif form.posted_successfully? %}
+                              aria-describedby="Newsletter-success--{{ section.id }}"
+                            {% endif %}
+                            placeholder="{{ 'newsletter.label' | t }}"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                            required
+                          >
+                          <label class="field__icon" for="NewsletterForm--{{ section.id }}">
+                            {% render 'icon-newslatter' %}
+                          </label>
+                          <span class="field__label">
+                            {{ block.settings.text }}
+                          </span>
+                          <button type="submit" class="newsletter-form__button field__button small-hide medium-hide" name="commit" id="Subscribe--{{ section.id }}" aria-label="{{ 'newsletter.button_label' | t }}--{{ section.id }}">
+                            {% render 'icon-arrow' %}
+                          </button>
+                        </div>
+                        {%- if form.errors -%}
+                          <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</small>
+                        {%- endif -%}
+                      </div>
+                      {%- if form.posted_successfully? -%}
+                        <h3 class="newsletter-form__message newsletter-form__message--success form__message" id="Newsletter-success--{{ section.id }}" tabindex="-1" autofocus>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>
+                      {%- endif -%}
+                    {% endform %}
+                  </div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        </div>
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.newsletter.name",
+  "tag": "section",
+  "class": "spaced-section spaced-section--full-width",
+  "disabled_on": {
+    "groups": ["custom.megamenu"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__1.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "in-grid-heading",
+          "label": "t:sections.newsletter.settings.layout.options__1.label"
+        },
+        {
+          "value": "heading-on-top",
+          "label": "t:sections.newsletter.settings.layout.options__2.label"
+        },
+        {
+          "value": "heading-on-top-center",
+          "label": "t:sections.newsletter.settings.layout.options__3.label"
+        }
+      ],
+      "default": "in-grid-heading",
+      "label": "t:sections.newsletter.settings.layout.label"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile_align",
+      "options": [
+        {
+          "value": "auto",
+          "label": "t:sections.global.layout_mobile_align.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.global.layout_mobile_align.options__2.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.global.layout_mobile_align.options__3.label"
+        }
+      ],
+      "default": "auto",
+      "label": "t:sections.global.layout_mobile_align.label"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "paragraph",
+      "content": "t:sections.newsletter.settings.paragraph.content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.newsletter.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Newsletter",
+          "label": "t:sections.newsletter.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "t:sections.newsletter.blocks.heading.settings.heading_color.label"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "name": "t:sections.newsletter.blocks.paragraph.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Sign up for our newsletter to stay up-to-date on our latest design finds and inspiring stories.</p>",
+          "label": "t:sections.newsletter.blocks.paragraph.settings.paragraph.label"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "t:sections.newsletter.blocks.paragraph.settings.text_color.label"
+        }
+      ]
+    },
+    {
+      "type": "email_form",
+      "name": "t:sections.newsletter.blocks.email_form.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Enter please your e-mail",
+          "label": "t:sections.newsletter.blocks.email_form.settings.text.label"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.newsletter.presets.name",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "paragraph"
+        },
+        {
+          "type": "email_form"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

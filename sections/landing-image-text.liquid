@@ -1,0 +1,292 @@
+<div class="container {{section.settings.Bodycolor}}">
+
+  {% if section.settings.title != blank %}
+    <div class="sixteen columns">
+      <h2 class="title center">{{ section.settings.title | escape }}</h2>
+
+      <div class="feature_divider"></div>
+    </div>
+  {% endif %}
+
+  {% for block in section.blocks %}
+    {% if section.blocks.size == 1 %}
+      {%- assign column_width = 'sixteen columns' -%}
+    {% elsif section.blocks.size == 3 %}
+      {%- assign column_width = 'one-third column' -%}
+    {% elsif section.blocks.size == 4 %}
+      {%- assign column_width = 'four columns' -%}
+    {% elsif section.blocks.size == 5 %}
+      {%- assign column_width = 'one-fifth column' -%}
+    {% else %}
+      {%- assign column_width = 'eight columns' -%}
+    {% endif %}
+    <div class="{{ column_width }} text-column block-{{ forloop.index }}" {{ block.shopify_attributes }}>
+      <div class="border-style--{{ block.settings.border_style }} text-align--{{ block.settings.align_text }} {{block.settings.Boxshadow}}">
+        {% if block.settings.enable_image %}
+          {% if block.settings.image != blank %}
+            <p>
+              <img
+                src="{{ block.settings.image.src | img_url: '300x' }}"
+                class="lazyload {{ settings.image_loading_style }}"
+                alt="{{ block.settings.image.alt }}"
+                data-sizes="auto"
+                data-src="{{ block.settings.image | img_url }}"
+                data-srcset=" {{ block.settings.image | img_url: '2048x' }} 2048w,                                                                                                                                                                                                                                                                               {{ block.settings.image | img_url: '600x' }} 600w,                                                                                                                                                                                                                                                                                     {{ block.settings.image | img_url: '400x' }} 400w" />
+            </p>
+            <noscript>
+              <p>
+                {{ block.settings.image | img_url: '480x480', scale: 2 | img_tag: block.settings.image.alt }}
+              </p>
+            </noscript>
+          {% else %}
+            <p>
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </p>
+          {% endif %}
+        {% endif %}
+        {% if block.settings.title != blank %}
+          <h3 class="{{ block.settings.heading_size }} {{block.settings.Headline_font}}">{{ block.settings.title | escape }}</h3>
+        {% endif %}
+        {% if block.settings.text != blank %}
+          <div class="rte-setting">{{ block.settings.text }}</div>
+        {% endif %}
+        {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+          <a href="{{ block.settings.button_link }}" class="action_button continue-button">
+            {{ block.settings.button_label | escape }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<style>
+  .container {
+    position: relative;
+    width: 1200px;
+    margin:auto;
+        margin-bottom: 50px;
+  }
+
+  .column {
+    display: table-cell;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-sizing: content-box;
+    text-align:center;
+}
+ h2.title.center {
+    font-family: 'Yellowtail', cursive !important;
+    text-transform: none !important;
+    font-size: 36px;
+    line-height: 45px;
+    font-weight: 600;
+    color: #999999;
+}
+
+ h3.regular_text {
+    font-family: 'Oswald';
+    font-weight: 600;
+    letter-spacing: 0;
+    font-size: 30px;
+    line-height: 35px;
+    color: #000;
+}
+
+ .large_text {
+   font-family: 'Oswald' !important;
+   font-weight: 600;
+   letter-spacing: 0;
+   color: #999999;
+}
+  
+ .feature_divider {
+    margin-bottom: 50px !important;
+    border-style: none;
+}
+
+@media screen and (min-width: 960px) {
+ .rte-setting p {
+    width: 100%;
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+ .one-third.column.text-column.block-2 {
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+}
+
+@media only screen and (min-width: 960px) and (max-width: 1199px) {
+ .container .one-third.column {
+    width: 299px;
+}
+}
+
+
+@media screen and (min-width: 1200px) {
+.container .one-third.column {
+    width: 379px;
+}
+}
+
+
+@media screen and (max-width: 768px) {
+ h2.title.center {
+    font-size: 28px;
+    line-height: 35px;
+}
+
+h3.regular_text {
+    font-size: 24px;
+    line-height: 30px;
+}
+}
+@media screen and (max-width: 767px) {
+  .column {
+    display: block;
+  }
+  .container{
+    width:100%;
+  }
+}
+#shopify-section-template--15978325409989__ab404f80-d75e-406f-ac65-1f730332e1c4 div.container {
+    padding-bottom: 0;
+}
+
+#shopify-section-template--15978325409989__c4761257-f088-4f96-913f-bd82f02ed32f div.container {
+    padding-top: 0;
+}
+</style>
+{% schema %}
+  {
+    "name": "Landing - Text Image Cols",
+    "class": "text-columns-with-images-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Text columns with images"
+      }, {
+        "type": "text",
+        "id": "Bodycolor",
+        "label": "Bodycolor"
+
+      }
+
+    ],
+    "blocks": [
+      {
+        "type": "text_block",
+        "name": "Column",
+        "limit": 5,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "enable_image",
+            "label": "Show image",
+            "default": true
+          },
+          //////////////////
+          {
+            "type": "text",
+            "id": "Boxshadow",
+            "label": "Boxshadow"
+          },
+          {
+            "type": "text",
+            "id": "Headline_font",
+            "label": "Headline font"
+          },
+          ////////////////////
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Add a title or tagline"
+          }, {
+            "type": "select",
+            "id": "heading_size",
+            "label": "Heading size",
+            "options": [
+              {
+                "value": "regular_text",
+                "label": "Regular"
+              }, {
+                "value": "large_text",
+                "label": "Large"
+              }
+            ],
+            "default": "regular_text"
+          }, {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Share blog posts, products, or promotions with your customers. Use this text to describe products, share details on availability and style, or as a space to display recent reviews or FAQs.</p>"
+          }, {
+            "type": "select",
+            "id": "align_text",
+            "label": "Text alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "center",
+                "label": "Centered"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }, {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+          }, {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+          }, {
+            "type": "select",
+            "id": "border_style",
+            "label": "Border style",
+            "options": [
+              {
+                "value": "none",
+                "label": "None"
+              }, {
+                "value": "box",
+                "label": "Box"
+              }, {
+                "value": "quote",
+                "label": "Quote"
+              }
+            ],
+            "default": "none"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Landing - Text Image Cols",
+        "category": "Text",
+        "blocks": [
+          {
+            "type": "text_block"
+          }, {
+            "type": "text_block"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

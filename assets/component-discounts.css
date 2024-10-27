@@ -1,0 +1,27 @@
+.discounts {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  line-height: calc(1 + 0.33333333 / var(--font-body-scale));
+  font-weight: 500;
+  color: rgb(var(--clr-discount));
+}
+
+.discounts__discount {
+  display: flex;
+  align-items: flex-start;  
+}
+
+.discounts__discount svg {
+  color: rgba(var(--color-button-background), var(--alpha-button-background));
+}
+
+.discounts__discount--end {
+  justify-content: flex-end;
+}
+
+.discounts__discount > .icon {
+  color: currentColor;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.5rem;
+}

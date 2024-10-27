@@ -1,0 +1,269 @@
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+{%- endstyle -%}
+
+<div id="MainCartFooter-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="page-width section-{{ section.id }}-padding{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
+    <div>
+       <div class="route-wrapper">
+           <div class="route-div"></div>
+       </div>
+      <div class="cart__footer">
+        {%- if section.settings.show_cart_note -%}
+          <cart-note class="cart__note field">
+            <textarea class="text-area text-area--resize-vertical field__input" name="note" form="cart" id="Cart-note" placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+            <label for="Cart-note" class="field__label">
+              {{ 'sections.cart.note' | t }}
+            </label>
+          </cart-note>
+        {%- endif -%}
+
+        <div class="cart__blocks">
+          {% for block in section.blocks %}
+            {%- case block.type -%}
+              {%- when '@app' -%}
+                {% render block %}
+              {%- when 'subtotal' -%}
+                <div class="js-contents" {{ block.shopify_attributes }}>
+                  <div class="totals">
+                    <h3 class="totals__subtotal">{{ 'sections.cart.subtotal' | t }}</h3>
+                    <p class="totals__subtotal-value h3">{{ cart.total_price | money_with_currency }}</p>
+                  </div>
+
+                  <div>
+                    {%- if cart.cart_level_discount_applications.size > 0 -%}
+                      <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                        {%- for discount in cart.cart_level_discount_applications -%}
+                          <li class="discounts__discount discounts__discount--end">
+                            {%- render 'icon-discount' -%}
+                            {{ discount.title }}
+                            (-{{ discount.total_allocated_amount | money }})
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </div>
+
+                  <small class="tax-note caption-large rte">
+                    {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                      {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                    {%- elsif cart.taxes_included -%}
+                      {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+                    {%- elsif shop.shipping_policy.body != blank -%}
+                      {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+                    {%- else -%}
+                      {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+                    {%- endif -%}
+                  </small>
+                </div>
+              {%- else -%}
+                <div class="cart__buttons">
+                  {%- if block.settings.show_confirmation_checkbox -%}
+                    <label for="cart-checkout-button-confirmation" class="cart__ctas-confirmation styled-checkbox">
+                        <input type="checkbox"
+                          class="hidden"
+                          id="cart-checkout-button-confirmation"
+                          onchange="toggleCartCheckoutConfirmation.call(this)"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                        <span class="styled-checkbox__checkmark">
+                            {% render 'icon-checkmark' %}
+                        </span>
+                        {{ 'sections.cart.confirmation_checkbox_text' | t }}
+                    </label>
+                    {%- assign has_confirmation_checkbox = true -%}
+                  {%- endif -%}
+                            
+                  <!-- Route Code Edited 10/17/2024 
+                  <div class="route-div"></div> 
+                  <!-- Route Code End -->
+                              
+                  <div class="cart__ctas" {{ block.shopify_attributes }}>
+                    <noscript>
+                      <button type="submit"{% if block.settings.show_confirmation_checkbox %} disabled{% endif %} class="cart__update-button button button--secondary" form="cart">
+                        {{ 'sections.cart.update' | t }}
+                      </button>
+                    </noscript>
+
+                    <button type="submit" id="checkout" class="cart__checkout-button button button--small-full-width" name="checkout"{% if cart == empty or block.settings.show_confirmation_checkbox %} disabled{% endif %} form="cart">
+                      {{ 'sections.cart.checkout' | t }}
+                    </button>
+                  </div>
+
+                  {%- if additional_checkout_buttons -%}
+                    <div class="cart__dynamic-checkout-buttons{% if block.settings.show_confirmation_checkbox %} cart__dynamic-checkout-buttons--disabled{% endif %} additional-checkout-buttons">
+                      {{ content_for_additional_checkout_buttons }}
+                    </div>
+                  {%- endif -%}
+                </div>
+            {%- endcase -%}
+          {% endfor %}
+
+          <div id="cart-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{%- if has_confirmation_checkbox -%}
+  <script>
+    function toggleCartCheckoutConfirmation() {
+      const ctasButton = document.querySelector('.cart__ctas button');
+      const dynamicCheckoutButtons = document.querySelector('.cart__dynamic-checkout-buttons');
+      
+      ctasButton[this.checked ? 'removeAttribute' : 'setAttribute']('disabled', true);
+
+      if (dynamicCheckoutButtons) {
+        dynamicCheckoutButtons.classList[this.checked ? 'remove' : 'add']('cart__dynamic-checkout-buttons--disabled');
+      }
+    };
+  </script>
+{%- endif -%}
+
+{% javascript %}
+  class CartNote extends HTMLElement {
+    constructor() {
+      super();
+
+      this.addEventListener('change', debounce((event) => {
+        const body = JSON.stringify({ note: event.target.value });
+        fetch(`${routes.cart_update_url}`, {...fetchConfig(), ...{ body }});
+      }, 300))
+    }
+  }
+
+  customElements.define('cart-note', CartNote);
+{% endjavascript %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function isIE() {
+      const ua = window.navigator.userAgent;
+      const msie = ua.indexOf('MSIE ');
+      const trident = ua.indexOf('Trident/');
+
+      return (msie > 0 || trident > 0);
+    }
+
+    if (!isIE()) return;
+    const cartSubmitInput = document.createElement('input');
+    cartSubmitInput.setAttribute('name', 'checkout');
+    cartSubmitInput.setAttribute('type', 'hidden');
+    document.querySelector('#cart').appendChild(cartSubmitInput);
+    document.querySelector('#checkout').addEventListener('click', function(event) {
+      document.querySelector('#cart').submit();
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-cart-footer.name",
+  "class": "cart__footer-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+      "default": "none",
+    
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+      "default": 0
+    
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_note",
+      "default": true,
+      "label": "t:sections.main-cart-footer.settings.show_cart_note.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subtotal",
+      "name": "t:sections.main-cart-footer.blocks.subtotal.name",
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.main-cart-footer.blocks.buttons.name",
+      "limit": 1,
+      "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_confirmation_checkbox",
+            "default": true,
+            "label": "t:sections.main-cart-footer.blocks.buttons.settings.show_confirmation_checkbox.label"
+          }
+        ]
+    },
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

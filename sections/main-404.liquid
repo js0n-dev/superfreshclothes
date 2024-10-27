@@ -1,0 +1,203 @@
+{%- style -%}
+  {%- if section.settings.title_color.alpha > 0 -%}
+    #Main404-{{ section.id }} .template-404__content h1 {
+      color: rgb({{ section.settings.title_color.red }}, {{ section.settings.title_color.green }}, {{ section.settings.title_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.description_color.alpha > 0 -%}
+    #Main404-{{ section.id }} .template-404__content p {
+      color: rgb({{ section.settings.description_color.red }}, {{ section.settings.description_color.green }}, {{ section.settings.description_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.button_color.alpha > 0 -%}
+        #Main404-{{ section.id }} .template-404__button {
+            --color-button: {{ section.settings.button_color.red }}, {{ section.settings.button_color.green }}, {{ section.settings.button_color.blue }};
+            {%- if 'primary' contains section.settings.button_style -%}
+                --color-button-text: {% render 'color-contrast' with color: section.settings.button_color %};
+            {%- endif -%}
+        }
+  {%- endif -%}
+{%- endstyle -%}
+
+<style type="text/css">
+  .template-404 {
+    margin-bottom: 6rem;
+  }
+
+  .template-404__poster {
+    display: block !important;
+    position: relative;
+    {% if section.settings.image == blank %}
+      background-color: rgba(var(--color-foreground), 0.03);
+      border-radius: var(--images-border-radius);
+    {% endif %}
+  }
+
+  .template-404__poster::before {
+    content: '';
+    display: block;
+    padding-bottom: 51.47058823529412%;
+  }
+
+  @media screen and (max-width: 992px) {
+    .template-404__content {
+      margin-top: 2rem;
+    }
+  }
+
+  @media screen and (min-width: 993px) {
+    .template-404 {
+      position: relative;
+      margin-bottom: 8rem;
+    }
+    
+    .template-404__content {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 4rem;
+    }
+  }
+
+  .template-404 .title {
+    margin: 0;
+  }
+
+  .template-404 p {
+    margin: 1rem 0 0;
+  }
+
+  .template-404__button {
+    margin-top: 3rem;
+  }
+
+  .template-404__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--images-border-radius);
+    overflow: hidden;
+  }
+
+  .template-404__image .media {
+    position: static;
+  }
+</style>
+
+<div id="Main404-{{ section.id }}">
+  <div class="page-width">
+    <div class="template-404">
+      <div class="template-404__poster">
+        {%- if section.settings.image != blank -%}
+          <div class="template-404__image">
+            <div class="media">
+              <img
+                  srcset="{%- if section.settings.image.width >= 375 -%}{{ section.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                    {%- if section.settings.image.width >= 750 -%}{{ section.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                    {%- if section.settings.image.width >= 1100 -%}{{ section.settings.image | img_url: '1100x' }} 1100w,{%- endif -%}
+                    {%- if section.settings.image.width >= 1500 -%}{{ section.settings.image | img_url: '1500x' }} 1500w,{%- endif -%}
+                    {%- if section.settings.image.width >= 1780 -%}{{ section.settings.image | img_url: '1780x' }} 1780w,{%- endif -%}
+                    {%- if section.settings.image.width >= 2000 -%}{{ section.settings.image | img_url: '2000x' }} 2000w,{%- endif -%}
+                    {%- if section.settings.image.width >= 3000 -%}{{ section.settings.image | img_url: '3000x' }} 3000w,{%- endif -%}
+                    {%- if section.settings.image.width >= 3840 -%}{{ section.settings.image | img_url: '3840x' }} 3840w,{%- endif -%}
+                    {{ section.settings.image | img_url: 'master' }} {{ section.settings.image.width }}w"
+                  sizes="100vw"
+                  src="{{ section.settings.image | img_url: '1500x' }}"
+                  loading="lazy"
+                  alt="{{ section.settings.image.alt | escape }}"
+                  width="{{ section.settings.image.width }}"
+                  height="{{ section.settings.image.width | divided_by: section.settings.image.aspect_ratio }}"
+                  style="object-position: {{ section.settings.image.presentation.focal_point }};"
+                >
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="template-404__content">
+        <h1 class="title {{ section.settings.title_size }}">
+          {{ 'templates.404.title' | t }}
+        </h1>
+        <p>
+          {{ 'templates.404.subtext' | t }}
+        </p>
+        <a href="{{ routes.all_products_collection_url }}" class="template-404__button {% render 'button-class' with button_style: section.settings.button_style, button_class: 'button--small-full-width' %}">
+          {{ 'general.continue_shopping' | t }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-404.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.main-404.settings.image.label",
+      "info": "t:sections.main-404.settings.image.info"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.brandlist.settings.title_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.brandlist.settings.title_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.brandlist.settings.title_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.brandlist.settings.title_size.label"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "t:sections.brandlist.settings.title_color.label"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.brandlist.settings.description_color.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.options__2.label"
+        },
+        {
+          "value": "link-style",
+          "label": "t:sections.all.button_style.options__3.label"
+        }
+      ],
+      "default": "secondary",
+      "label": "t:sections.all.button_style.label"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:sections.all.button_color.label"
+    }
+  ]
+}
+{% endschema %}

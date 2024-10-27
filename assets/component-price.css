@@ -1,0 +1,125 @@
+.price {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: 0;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+  line-height: calc(1 + 0.291666666666667 / max(1, var(--font-heading-scale)));
+  text-transform: uppercase;
+  color: rgb(var(--clr-cost));
+}
+
+.price .visually-hidden {
+  display: none;
+}      
+
+.card-information .price {
+  font-size: calc(var(--font-heading-scale) * 1.8rem);
+  line-height: calc(1 + 0.277777777777778 / max(1, var(--font-heading-scale)));
+}
+
+.price.price--unavailable {
+  visibility: hidden;
+}
+
+.price--end {
+  justify-content: flex-end;
+}
+
+.price .price-item {
+  margin: 0 1rem 0 0;
+}
+
+.price:not(.price--show-badge) .price-item--last:last-of-type {
+  margin: 0;
+}
+
+@media screen and (min-width: 577px) {
+  .price {
+    margin-bottom: 0;
+  }
+}
+
+.price--large {
+  text-transform: uppercase;
+}
+
+.price--large .price-item--sale.price-item--last {
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+  line-height: calc(1 + 0.291666666666667 / max(1, var(--font-heading-scale)));
+  color: rgb(var(--clr-sale-cost));
+}
+
+.price--sold-out .price__availability,
+.price__regular {
+  display: block;
+}
+
+.price__sale,
+.price__availability,
+.price .price__badge-sale,
+.price .price__badge-sold-out,
+.price--on-sale .price__regular,
+.price--on-sale .price__availability {
+  display: none;
+}
+
+.price--sold-out .price__badge-sold-out,
+.price--on-sale .price__badge-sale {
+  display: inline-flex;
+}
+
+.price--on-sale .price__sale {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.price:not(.price--no-compare):not(.price--show-badge) .price-item--sale.price-item--last:last-of-type {
+  margin-top: 0.5rem;
+  color: rgb(var(--clr-sale-cost));
+}
+
+.price--center {
+  display: flex;
+  justify-content: center;
+}
+
+.price--on-sale .price-item--regular {
+  text-decoration: line-through;
+  color: rgb(var(--clr-cost));
+  font-size: calc(var(--font-heading-scale) * 1.4rem);
+  line-height: calc(1 + 0.285714285714286 / var(--font-heading-scale));
+}
+
+.unit-price {
+  display: block;
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+  font-size: 1.4rem;
+  line-height: calc(1 + 0.285714285714286 / var(--font-body-scale));
+  text-transform: none;
+}
+
+.product.center .price {
+  align-items: center;
+}
+
+.product.center .price-item {
+  margin: 0;
+}
+
+@media screen and (max-width: 576px) {
+  .product.mobile-center .price {
+    align-items: center;
+  }
+
+  .product.mobile-center .price-item {
+    margin: 0;
+  }
+}

@@ -1,0 +1,50 @@
+{%- capture badge_size %}{{ settings.product_custom_badge_width }}x{% endcapture -%} 
+{%- if theme_badge != blank and metafield.value == true -%}
+    {%- capture badge_src %}
+        src="{{ theme_badge | asset_img_url: badge_size }}"
+        srcset="{{ theme_badge | asset_img_url: badge_size }} 1x, {{ theme_badge | asset_img_url: badge_size, scale: 2 }} 2x, {{ theme_badge | asset_img_url: badge_size, scale: 3 }} 3x"
+    {% endcapture -%}
+{%- endif -%}
+{%- if metafield.type == 'file_reference' -%}
+    {%- capture badge_src %}
+        src="{{ metafield.value | img_url: badge_size }}"
+        srcset="{{ metafield.value | img_url: badge_size }} 1x, {{ metafield.value | img_url: badge_size, scale: 2 }} 2x, {{ metafield.value | img_url: badge_size, scale: 3 }} 3x"
+    {% endcapture -%}
+{%- elsif metafield.type == 'boolean' and metafield.value == true and settings[setting_name] != blank -%}
+    {%- capture badge_src %}
+        src="{{ settings[setting_name] | img_url: badge_size }}"
+        srcset="{{ settings[setting_name] | img_url: badge_size }} 1x, {{ settings[setting_name] | img_url: badge_size, scale: 2 }} 2x, {{ settings[setting_name] | img_url: badge_size, scale: 3 }} 3x"
+    {% endcapture -%}
+{%- endif -%}
+{%- if badge_src != blank -%}
+    {%- if badge_src contains 'coming' -%}
+    <span class="comming-soon--badge" style="
+    ">Coming Soon!</span>
+      <style>
+        .comming-soon--badge{
+          background: #e9e9eb;
+          color: #919193;
+          padding: 5px;
+          font-size: 13px;}
+        @media only screen and (max-width: 600px) {
+        :is(.card__custom-badge,.product__custom-badge).custom-badges{
+                  max-width: 73.33% !important;
+            }
+          .comming-soon--badge{
+          background: #e9e9eb;
+          color: #919193;
+          padding: 5px;
+          font-size: 10px;
+        }
+        }
+      </style>
+    {%- else -%}
+    <img
+        class="custom-badges__badge"
+        {{ badge_src }}
+        alt="Product badge"
+        loading="lazy"
+        width="80"
+    >
+  {%- endif -%}
+{%- endif -%}

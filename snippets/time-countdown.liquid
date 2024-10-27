@@ -1,0 +1,34 @@
+{%- assign date = date | default: product.metafields.custom.time_countdown.value | default: product.metafields.countdown.date -%}
+{%- if date != blank -%}
+    {{ 'component-time-countdown.css' | asset_url | stylesheet_tag }}
+    <time-countdown class="time-countdown {{ class }}" data-date="{{ date }}">
+        {%- if show_discount_badge -%}
+            <div class="time-countdown__timer-prefix">{{ 'products.product.on_sale' | t }}</div>
+        {%- endif -%}
+        <div class="time-countdown__timer">
+            <span class="time-countdown__section">
+                <span class="time-countdown__time">--</span>
+              {% comment %}
+                <!-- <span class="time-countdown__postfix">{{ 'products.product.countdown.days' | t }}</span> -->
+              {% endcomment %}
+                <span class="time-countdown__postfix">Day</span>
+            </span>
+            <span class="time-countdown__break">&nbsp;:&nbsp;</span>
+            <span class="time-countdown__section">
+                <span class="time-countdown__time">--</span>
+                <span class="time-countdown__postfix">{{ 'products.product.countdown.hours' | t }}</span>
+            </span>
+            <span class="time-countdown__break">&nbsp;:&nbsp;</span>
+            <span class="time-countdown__section">
+                <span class="time-countdown__time">--</span>
+                <span class="time-countdown__postfix">{{ 'products.product.countdown.minutes' | t }}</span>
+            </span>
+            <span class="time-countdown__break">&nbsp;:&nbsp;</span>
+            <span class="time-countdown__section">
+                <span class="time-countdown__time">--</span>
+                <span class="time-countdown__postfix">{{ 'products.product.countdown.seconds' | t }}</span>
+            </span>
+        </div>
+    </time-countdown>
+    <script src="{{ 'time-countdown.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

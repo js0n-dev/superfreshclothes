@@ -1,0 +1,95 @@
+<!-- Bold: Memberships (page) -->
+{% include 'bold_mem_helper' with 'page' %}
+<!-- end Bold code -->
+
+<link rel="stylesheet" href="{{ 'section-main-page.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-rte.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'section-main-page.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+{%- endstyle -%}
+
+<div id="MainPageSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="main-page section-{{ section.id }}-padding page-width page-width--narrow">
+    <h1 class="main-page-title page-title center h0 heading-case">
+      {{ page.title | escape }}
+    </h1>
+    {%- if page.content != blank -%}
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    {%- endif -%}
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-page.name",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+      "default": "none",
+    
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+      "default": 60
+    
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+}
+  ]
+}
+{% endschema %}

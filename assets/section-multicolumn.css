@@ -1,0 +1,134 @@
+.multicolumn .grid-bs {
+  row-gap: 4rem;
+}
+
+.multicolumn-card__image-wrapper .media:not(.media--circle) {
+  border-radius: var(--images-border-radius);
+}
+
+.multicolumn-card__image-wrapper--third-width {
+  width: 33%;
+}
+
+.multicolumn-card__image-wrapper--half-width {
+  width: 50%;
+}
+
+.multicolumn-list__item--center
+  .multicolumn-card__image-wrapper:not(.multicolumn-card__image-wrapper--full-width),
+.multicolumn-list__item:only-child {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.multicolumn-list__item--center {
+  text-align: center;
+}
+
+.multicolumn-list__item--right {
+  text-align: right;
+}
+
+.multicolumn-list {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.multicolumn-card > * + * {
+  margin-top: 2rem;
+}
+
+.multicolumn-list h3 {
+  line-height: calc(1 + 0.5 / max(1, var(--font-heading-scale)));
+}
+
+.multicolumn-list h3,
+.multicolumn-list p {
+  margin: 0;
+}
+
+@media screen and (max-width: 576px) {
+  .multicolumn-list {
+    margin: 0;
+    width: 100%;
+  }
+
+  .multicolumn-list:not(.slider) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .multicolumn-list.slider .multicolumn-list__item {
+    width: calc(100% - 3rem);
+  }
+
+  .multicolumn-list.slider .multicolumn-list__item + .multicolumn-list__item {
+    padding-left: 0.5rem;
+  }
+}
+
+@media screen and (min-width: 577px) {
+  .multicolumn-list.slider,
+  .multicolumn-list.grid--4-col-desktop {
+    padding: 0;
+  }
+
+  .multicolumn-list__item,
+  .grid--4-col-desktop .multicolumn-list__item {
+    padding-bottom: 0;
+  }
+
+  .grid--2-col-tablet .multicolumn-list__item {
+    margin-top: 1rem;
+    max-width: 50%;
+  }
+
+  .background-none .grid--2-col-tablet .multicolumn-list__item {
+    margin-top: 4rem;
+  }
+
+  .grid--2-col-tablet .multicolumn-list__item:nth-of-type(-n + 2) {
+    margin-top: 0;
+  }
+}
+
+@media screen and (min-width: 993px) {
+  .grid--2-col-tablet.grid--4-col-desktop .multicolumn-list__item {
+    max-width: 25%;
+  }
+
+  .grid--2-col-tablet.grid--4-col-desktop
+    .multicolumn-list__item:nth-of-type(-n + 4) {
+    margin-top: 0;
+  }
+}
+
+.background-none .multicolumn-card-spacing {
+  padding: 0;
+  margin: 0;
+}
+
+.multicolumn-card__info h3 {
+  text-transform: var(--headings-case);
+  margin: 0;
+  font-weight:600;
+}
+
+.multicolumn-card__info > * + * {
+  margin-top: 1rem;
+}
+
+.multicolumn-card__info .link {
+  text-decoration: none;
+  font-size: inherit;
+}
+
+.multicolumn-card__icon .icon {
+  width: 4rem;
+  height: 4rem;
+  color: rgb(var(--clr-icon));
+}
+
+.multicolumn-card__icon + * {
+  margin-top: 2rem;
+}

@@ -1,0 +1,206 @@
+.popups {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.popups .page-width {
+    --page-width: 100%;
+}
+
+.popups .button {
+    --clr-button-secondary: var(--clr-theme-base);
+}
+
+.popups,
+.newsletter-popup__text {
+    color: rgb(var(--popups-foreground));
+}
+
+.newsletter-popup .field {
+    --color-foreground: var(--popups-foreground);
+}
+
+.popups__content {
+    position: relative;
+    pointer-events: all;
+}
+
+.popups__close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-right-radius: var(--buttons-border-radius);
+    border-bottom-right-radius: var(--buttons-border-radius);
+}
+
+.popups__close-button .icon {
+    color: rgb(var(--clr-icon));
+}
+
+.newsletter-popup,
+.app-popup--type-2 {
+    margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 577px) {
+    .newsletter-popup,
+    .app-popup--type-2 {
+        margin-bottom: 3rem;
+    }
+}
+
+@media screen and (min-width: 993px) {
+    .newsletter-popup,
+    .app-popup--type-2 {
+        margin-bottom: 6rem;
+    }
+
+    .newsletter-popup {
+        margin-right: 2rem;
+    }
+}
+
+.newsletter-popup__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.newsletter-popup__content,
+.app-popup--type-2 .app-popup__content {
+    padding: 2rem;
+    border-radius: var(--images-border-radius);
+    border: 0.1rem solid rgb(var(--color-foreground));
+}
+
+@media screen and (min-width: 577px) {
+    .newsletter-popup__content,
+    .app-popup--type-2 .app-popup__content {
+        width: 66.6666%;
+        margin-left: auto;
+        padding: 4rem;
+    }
+}
+
+@media screen and (min-width: 577px) and (max-width: 992px) {
+    .newsletter-popup__content {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 993px) {
+    .newsletter-popup__content,
+    .app-popup--type-2 .app-popup__content {
+        width: 33.3333%;
+        min-width: 44rem;
+    }
+}
+
+.newsletter-popup__text {
+    padding-right: 2rem;
+    margin: 0;
+    text-transform: var(--headings-case);
+}
+
+@media screen and (min-width: 577px) {
+    .newsletter-popup__text {
+        padding-right: 0;
+    }
+}
+
+.newsletter-popup .newsletter-form,
+.newsletter-popup .newsletter-form__field-wrapper {
+    max-width: initial;
+}
+
+.newsletter-popup__content,
+.cookie-popup,
+.app-popup--type-1,
+.app-popup--type-2 .app-popup__content {
+    background-color: rgb(var(--popups-background));
+}
+
+.cookie-popup__content {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 2rem;
+    row-gap: 1rem;
+}
+
+.cookie-popup__content,
+.app-popup--type-1 .app-popup__content {
+    min-height: 7rem;
+    padding: 1rem 0 2rem;
+    border-top: 0.1rem solid rgba(var(--clr-line), var(--clr-line-alpha));
+}
+
+@media screen and (min-width: 577px) {
+    .cookie-popup__content,
+    .app-popup--type-1 .app-popup__content {
+        align-items: center;
+        padding: 1rem 0 3rem;
+    }
+
+    .cookie-popup__content {
+        justify-content: space-between;
+        flex-direction: row;
+    }
+}
+
+@media screen and (min-width: 993px) {
+    .cookie-popup__content,
+    .app-popup--type-1 .app-popup__content {
+        padding: 1rem 0;
+    }
+}
+
+.cookie-popup,
+.app-popup--type-1 {
+    font-size: 1.2rem;
+    line-height: calc(1 + 0.333333333333333 / var(--font-body-scale));
+}
+
+.cookie-popup__text {
+    margin: 0;
+}
+
+.cookie-popup__buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-shrink: 0;
+    gap: 2rem;
+}
+
+@media screen and (min-width: 577px) {
+    .cookie-popup__buttons {
+        justify-content: flex-end;
+        align-items: center;
+    }
+}
+
+.cookie-popup__buttons .link-button {
+    --color-link: var(--clr-theme-accent);
+}
+
+.popups__block {
+    display: none;
+}
+
+.popups__block.popups__block--show,
+#shopify-section-popups.design-mode-section-selected .popups__block {
+    display: block;
+}

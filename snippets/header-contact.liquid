@@ -1,0 +1,28 @@
+<div class="header-contact">
+    {%- for i in (1..4) -%}
+        {%- assign icon_svg_prop = 'icon_svg_' | append: i -%}
+        {%- assign title_prop = 'title_' | append: i -%}
+        {%- assign text_prop = 'text_' | append: i -%}
+        {%- assign icon_name = 'icon-' | append: contact_block.settings[icon_svg_prop] -%}
+        {% capture icon_snippet %}{% include icon_name %}{% endcapture %}
+        {%- if icon_snippet contains 'Liquid error' -%}
+            {%- assign icon_name = 'icon-theme-' | append: contact_block.settings[icon_svg_prop] -%}
+            {% capture icon_snippet %}{% include icon_name %}{% endcapture %}
+        {%- endif -%}
+        <div class="header-contact__section">
+            {%- unless icon_snippet contains 'Liquid error' -%}
+                <div class="header-contact__icon">
+                    {{ icon_snippet }}
+                </div>
+            {%- endunless -%}
+            <div class="header-contact__text">
+            {%- if contact_block.settings[title_prop] != blank -%}
+                <span class="h4">{{ contact_block.settings[title_prop] }}</span>
+            {%- endif -%}
+            {%- if contact_block.settings[text_prop] != blank -%}
+                {{ contact_block.settings[text_prop] }}
+            {%- endif -%}
+            </div>
+        </div>
+    {%- endfor -%}
+</div>

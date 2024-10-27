@@ -1,0 +1,431 @@
+{{ 'map-section.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+{%- endstyle -%}
+{%- if section.settings.heading_color.alpha > 0 -%}
+  {%- style -%}
+    #MapSection-{{ section.id }} .heading-wrapper__heading .title {
+      color: rgb({{ section.settings.heading_color.red }}, {{ section.settings.heading_color.green }}, {{ section.settings.heading_color.blue }});
+    }
+  {%- endstyle -%}
+{%- endif -%}
+{%- if section.settings.information_color.alpha > 0 -%}
+  {%- style -%}
+    #MapSection-{{ section.id }} .map-section__list {
+      color: rgb({{ section.settings.information_color.red }}, {{ section.settings.information_color.green }}, {{ section.settings.information_color.blue }});
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+
+<div id="MapSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="map-section section-{{ section.id }}-padding page-width">
+    <div class="grid-bs">
+      {%- capture heading_html -%}
+        <div class="map-section__heading-item g-col-12 g-col-sm-6">
+          <div class="heading-wrapper animated-appearance">
+            {%- if section.settings.heading != blank -%}
+              <div class="heading-wrapper__heading">
+                <h2 class="map-section__title title {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+              </div>
+              {%- assign left_column = true -%}
+            {%- endif -%}
+            {%- if section.blocks.size > 0 -%}
+              <div class="small-hide">
+                {% capture list_items_html %}
+                  <ul class="map-section__list list-unstyled hover-animation-global animated-appearance">
+                    {%- for block in section.blocks -%}
+                      {%- assign icon = blank -%}
+                      {%- if block.settings.icon_image != blank -%}
+                        {% capture icon %}
+                          <img srcset="{{ block.settings.icon_image | img_url: '40x' }} 1x, {{ block.settings.icon_image | img_url: '40x', scale: 2 }} 2x"
+                            src="{{ block.settings.icon_image | img_url: '40x' }}"
+                            loading="lazy"
+                            alt="{{ block.settings.icon_image.alt | default: shop.name | escape }}"
+                            style="object-position: {{ block.settings.icon_image.presentation.focal_point }};"
+                          >
+                        {% endcapture %}
+                      {%- elsif block.settings.icon_svg != blank -%}
+                        {% capture icon_svg_snippet %}icon-theme-{{ block.settings.icon_svg }}{% endcapture %}
+                        {% capture icon %}
+                          {% include icon_svg_snippet %}
+                        {% endcapture %}
+                        {%- if icon contains 'Liquid error' -%}
+                          {%- assign icon = blank -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                      <li class="map-section__list-item">
+                        {%- if icon != blank -%}
+                          <span class="map-section__icon">{{ icon }}</span>
+                        {%- endif -%}
+                        <span>{{ block.settings.text }}</span>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {% endcapture %}
+                {{ list_items_html }}
+              </div>
+              {%- assign left_column = true -%}
+            {%- endif -%}
+            {%- if section.settings.button_label != blank -%}
+              <div class="heading-wrapper__buttons small-hide">
+                <div class="heading-wrapper__button">
+                  <a{% if section.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link }}"{% endif %} class="map-section__button button button--secondary">{{ section.settings.button_label | escape }}</a>
+                </div>
+              </div>
+              {%- assign left_column = true -%}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endcapture -%}
+
+      {%- if left_column -%}
+        {{ heading_html }}
+      {%- endif -%}
+
+      <div class="map-section__media-item g-col-12{% if left_column %} g-col-sm-6{% endif %} animated-appearance">
+        {%- if section.settings.image != blank -%}
+          <div class="map-section__image hover-animation-global">
+            <div class="media media--transparent media--{{ section.settings.image_ratio }}"
+              {% if section.settings.image_ratio == 'adapt' %}
+                style="padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;"
+              {% endif %}>
+              <img
+                srcset="{%- if section.settings.image.width >= 275 -%}{{ section.settings.image | img_url: '275x' }} 275w,{%- endif -%}
+                  {%- if section.settings.image.width >= 550 -%}{{ section.settings.image | img_url: '550x' }} 550w,{%- endif -%}
+                  {%- if section.settings.image.width >= 710 -%}{{ section.settings.image | img_url: '710x' }} 710w,{%- endif -%}
+                  {%- if section.settings.image.width >= 1420 -%}{{ section.settings.image | img_url: '1420x' }} 1420w,{%- endif -%}
+                  {{ section.settings.image | img_url: 'master' }} {{ section.settings.image.width }}w"
+                src="{{ section.settings.image | img_url: '550x' }}"
+                sizes="100vw"
+                alt="{{ section.settings.image.alt }}"
+                height="{{ section.settings.image.height }}"
+                width="{{ section.settings.image.width }}"
+                loading="lazy"
+                style="object-position: {{ section.settings.image.presentation.focal_point }};"
+              >
+            </div>
+          </div>
+        {%- elsif section.settings.map_address != blank or section.settings.map_api_key != blank -%}
+          <div class="map-section__iframe{% unless left_column %} map-section__iframe--fullwidth{% endunless %}">
+            <google-map class="map-section__google-map" 
+              data-address="{{ section.settings.map_address }}" 
+              data-api-key="{{ section.settings.map_api_key }}" 
+              data-style="{{ section.settings.map_style }}"
+              data-zoom="{{ section.settings.map_zoom }}" 
+              data-show-marker="{{ section.settings.map_show_marker }}"
+            >
+            </google-map>
+          </div>
+        {%- else -%}
+          <div class="map-section__iframe{% unless left_column %} map-section__iframe--fullwidth{% endunless %} placeholder">
+            <div class="media">
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if list_items_html != blank -%}
+        <div class="g-col-12 medium-hide large-up-hide">
+          {{ list_items_html }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank-%}
+        <div class="g-col-12 medium-hide large-up-hide">
+          <a{% if section.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link }}"{% endif %} class="map-section__button button button--primary button--small-full-width">
+            {{ section.settings.button_label | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.map.name",
+  "tag": "section",
+  "class": "spaced-section spaced-section--full-width",
+  "disabled_on": {
+    "groups": ["custom.megamenu"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Map",
+      "label": "t:sections.map.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.map.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.map.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.map.settings.heading_size.options__3.label"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.map.settings.heading_size.label"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:sections.map.settings.heading_color.label"
+    },
+    {
+      "type": "color",
+      "id": "information_color",
+      "label": "t:sections.map.settings.information_color.label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.all.button_label.label",
+      "info": "t:sections.all.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.all.button_link.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.map.settings.header__1.content"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "header",
+      "content": "t:sections.map.settings.header__2.content"
+    },
+    {
+      "type": "text",
+      "id": "map_address",
+      "label": "t:sections.map.settings.map_address.label",
+      "info": "t:sections.map.settings.map_address.info"
+    },
+    {
+      "type": "text",
+      "id": "map_api_key",
+      "label": "t:sections.map.settings.map_api_key.label",
+      "info": "t:sections.map.settings.map_api_key.info"
+    },
+    {
+      "type": "select",
+      "id": "map_style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default Google Maps"
+        },
+        {
+          "value": "greyscale",
+          "label": "Greyscale"
+        },
+        {
+          "value": "dark",
+          "label": "Dark" 
+        },
+        {
+          "value": "light",
+          "label": "Light"
+        },
+        {
+          "value": "avocado",
+          "label": "Avocado"
+        },
+        {
+          "value": "blue-water",
+          "label": "Blue water"
+        }
+      ],
+      "default": "greyscale",
+      "label": "Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "map_show_marker",
+      "label": "t:sections.map.settings.map_show_marker.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "map_zoom",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "x",
+      "label": "t:sections.map.settings.map_zoom.label",
+      "default": 15
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.map.settings.image.label",
+      "info": "t:sections.map.settings.image.info"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.map.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.map.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.map.settings.image_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.map.settings.image_ratio.options__4.label"
+        },
+        {
+          "value": "circle",
+          "label": "t:sections.map.settings.image_ratio.options__5.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.map.settings.image_ratio.label"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.map.settings.paragraph__1.content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "info_line",
+      "name": "t:sections.map.blocks.info_line.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon_svg",
+          "default": "phone-large",
+          "label": "t:sections.map.blocks.info_line.settings.icon_svg.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "t:sections.map.blocks.info_line.settings.icon_image.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Text</p>",
+          "label": "t:sections.map.blocks.info_line.settings.text.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.map.presets.name",
+      "blocks": [
+        {
+          "type": "info_line",
+          "settings": {
+            "icon_svg": "phone",
+            "text": "<p>Telephone: (123) 456-7890</p>"
+          }
+        },
+        {
+          "type": "info_line",
+          "settings": {
+            "icon_svg": "store",
+            "text": "<p>Showroom: 2356 Put Your Address Here, XZ 193566, COUNTRY</p>"
+          }
+        },
+        {
+          "type": "info_line",
+          "settings": {
+            "icon_svg": "time",
+            "text": "<p>Our hours of operation are Monday-Thursday: 10 AM-7 PM EST, Friday: 10 AM-6 PM EST, Saturday-Sunday: 1 PM-6 PM EST.</p>"
+          }
+        },
+        {
+          "type": "info_line", 
+          "settings": {
+            "icon_svg": "mail",
+            "text": "<p>Email: <a href=\"mailto:contact@youremail.com\">contact@youremail.com.</a></p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+  {% endschema %}

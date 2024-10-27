@@ -1,0 +1,160 @@
+.standard-color-white {  --background: #FFFFFF; }
+.standard-color-aliceblue, .standard-color-alice-blue {  --background: #f0f8ff; --border: none;  }
+.standard-color-antiquewhite, .standard-color-antique-white {  --background: #faebd7;  }
+.standard-color-aqua {  --background: #00ffff; --border: none;  }
+.standard-color-aquamarine, .standard-color-aqua-marine { --background: #7fffd4; --border: none;  }
+.standard-color-azure {  --background: #f0ffff; --border: none;  }
+.standard-color-beige {  --background: #f5f5dc; --border: none;  }
+.standard-color-bisque {  --background: #ffe4c4; --border: none;  }
+.standard-color-black {  --background: #000000; --border: none;  }
+.standard-color-blanchedalmond, .standard-color-blanched-almond  {  --background: #ffebcd; --border: none;  }
+.standard-color-blue {  --background: #0000ff; --border: none;  }
+.standard-color-blueviolet,.standard-color-blue-violet  {  --background: #8a2be2; --border: none;  }
+.standard-color-brown {  --background: #a52a2a; --border: none;  }
+.standard-color-burlywood, .standard-color-burly-wood {  --background: #deb887; --border: none;  }
+.standard-color-cadetblue, .standard-color-cadet-blue {  --background: #5f9ea0; --border: none;  }
+.standard-color-chartreuse {  --background: #7fff00; }
+.standard-color-chocolate {  --background: #d2691e; --border: none;  }
+.standard-color-coral {  --background: #ff7f50; --border: none;  }
+.standard-color-cornflowerblue, .standard-color-cornflower-blue {  --background: #6495ed; --border: none;  }
+.standard-color-cornsilk {  --background: #fff8dc; --border: none;  }
+.standard-color-crimson {  --background: #dc143c; --border: none;  }
+.standard-color-cyan {  --background: #00ffff; --border: none;  }
+.standard-color-darkblue, .standard-color-dark-blue  {  --background: #00008b; --border: none;  }
+.standard-color-darkcyan, .standard-color-dark-cyan {  --background: #008b8b; --border: none;  }
+.standard-color-darkgoldenrod, .standard-color-dark-golden-rod  {  --background: #b8860b; --border: none;  }
+.standard-color-darkgray, .standard-color-dark-gray {  --background: #a9a9a9; --border: none;  }
+.standard-color-darkgreen, .standard-color-dark-green {  --background: #006400; --border: none;  }
+.standard-color-darkkhaki, .standard-color-dark-khaki  {  --background: #bdb76b; --border: none;  }
+.standard-color-darkmagenta, .standard-color-dark-magenta {  --background: #8b008b; --border: none;  }
+.standard-color-darkolivegreen, .standard-color-dark-olive-green  {  --background: #556b2f; --border: none;  }
+.standard-color-darkorange, .standard-color-dark-orange {  --background: #ff8c00; --border: none;  }
+.standard-color-darkorchid, .standard-color-dark-orchid {  --background: #9932cc; --border: none;  }
+.standard-color-darkred, .standard-color-dark-red {  --background: #8b0000; --border: none;  }
+.standard-color-darksalmon, .standard-color-dark-salmon {  --background: #e9967a; --border: none;  }
+.standard-color-darkseagreen, .standard-color-dark-sea-green {  --background: #8fbc8f; --border: none;  }
+.standard-color-darkslateblue, .standard-color-dark-slate-blue {  --background: #483d8b; --border: none;  }
+.standard-color-darkslategray, .standard-color-dark-slate-gray {  --background: #2f4f4f; --border: none;  }
+.standard-color-darkturquoise, .standard-color-dark-turquoise {  --background: #00ced1; --border: none;  }
+.standard-color-darkviolet, .standard-color-dark-violet {  --background: #9400d3; --border: none;  }
+.standard-color-deeppink, .standard-color-deep-pink {  --background: #ff1493; --border: none;  }
+.standard-color-deepskyblue, .standard-color-deep-sky-blue {  --background: #00bfff; --border: none;  }
+.standard-color-dimgray, .standard-color-dim-gray {  --background: #696969; --border: none;  }
+.standard-color-dimgrey, .standard-color-dim-grey {  --background: #696969; --border: none;  }
+.standard-color-dodgerblue, .standard-color-dodger-blue {  --background: #1e90ff; --border: none;  }
+.standard-color-firebrick, .standard-color-fire-brick {  --background: #b22222; --border: none;  }
+.standard-color-floralwhite, .standard-color-floral-white {  --background: #fffaf0;  }
+.standard-color-forestgreen, .standard-color-forest-green {  --background: #228b22; --border: none;  }
+.standard-color-fuchsia {  --background: #ff00ff; --border: none;  }
+.standard-color-gainsboro {  --background: #dcdcdc; --border: none;  }
+.standard-color-ghostwhite, .standard-color-ghost-white {  --background: #f8f8ff;  }
+.standard-color-gold {  --background: #ffd700; --border: none;  }
+.standard-color-goldenrod, .standard-color-golden-rod {  --background: #daa520; --border: none;  }
+.standard-color-gray {  --background: #808080; --border: none;  }
+.standard-color-grey {  --background: #808080; --border: none;  }
+.standard-color-green {  --background: #008000; --border: none;  }
+.standard-color-greenyellow, .standard-color-green-yellow {  --background: #adff2f; --border: none;  }
+.standard-color-honeydew, .standard-color-honey-dew {  --background: #f0fff0; --border: none;  }
+.standard-color-hotpink, .standard-color-hot-pink {  --background: #ff69b4; --border: none;  }
+.standard-color-indianred, .standard-color-indian-red {  --background: #cd5c5c; --border: none;  }
+.standard-color-indigo {  --background: #4b0082; --border: none;  }
+.standard-color-ivory {  --background: #fffff0; --border: none;  }
+.standard-color-khaki {  --background: #f0e68c; --border: none;  }
+.standard-color-lavender {  --background: #e6e6fa; --border: none;  }
+.standard-color-lavenderblush, .standard-color-lavender-blush {  --background: #fff0f5; --border: none;  }
+.standard-color-lawngreen, .standard-color-lawn-green {  --background: #7cfc00; --border: none;  }
+.standard-color-lemonchiffon, .standard-color-lemon-chiffon {  --background: #fffacd; --border: none;  }
+.standard-color-lightblue, .standard-color-light-blue {  --background: #add8e6; --border: none;  }
+.standard-color-lightcoral, .standard-color-light-coral {  --background: #f08080; --border: none;  }
+.standard-color-lightcyan, .standard-color-light-cyan {  --background: #e0ffff; --border: none;  }
+.standard-color-lightgoldenrodyellow, .standard-color-light-golden-rod-yellow {  --background: #fafad2; --border: none;  }
+.standard-color-lightgray, .standard-color-light-gray {  --background: #d3d3d3;  }
+.standard-color-lightgrey, .standard-color-light-grey {  --background: #d3d3d3; --border: none;  }
+.standard-color-lightgreen, .standard-color-light-green {  --background: #90ee90; --border: none;  }
+.standard-color-lightpink, .standard-color-light-pink {  --background: #ffb6c1; --border: none;  }
+.standard-color-lightsalmon, .standard-color-light-salmon {  --background: #ffa07a; --border: none;  }
+.standard-color-lightseagreen, .standard-color-light-sea-green {  --background: #20b2aa; --border: none;  }
+.standard-color-lightskyblue, .standard-color-light-sky-blue {  --background: #87cefa; --border: none;  }
+.standard-color-lightslategray, .standard-color-light-slate-gray {  --background: #778899;  }
+.standard-color-lightsteelblue, .standard-color-light-steel-blue {  --background: #b0c4de; --border: none;  }
+.standard-color-lightyellow, .standard-color-light-yellow {  --background: #ffffe0; --border: none;  }
+.standard-color-lime {  --background: #00ff00; --border: none;  }
+.standard-color-limegreen, .standard-color-lime-green {  --background: #32cd32; --border: none;  }
+.standard-color-linen {  --background: #faf0e6; --border: none;  }
+.standard-color-magenta {  --background: #ff00ff; --border: none;  }
+.standard-color-maroon {  --background: #800000; --border: none;  }
+.standard-color-mediumaquamarine, .standard-color-medium-aqua-marine {  --background: #66cdaa; --border: none;  }
+.standard-color-mediumblue, .standard-color-medium-blue {  --background: #0000cd; --border: none;  }
+.standard-color-mediumorchid, .standard-color-medium-orchid {  --background: #ba55d3; --border: none;  }
+.standard-color-mediumpurple, .standard-color-medium-purple {  --background: #9370d8; --border: none;  }
+.standard-color-mediumseagreen, .standard-color-medium-sea-green {  --background: #3cb371; --border: none;  }
+.standard-color-mediumslateblue, .standard-color-medium-slate-blue {  --background: #7b68ee; --border: none;  }
+.standard-color-mediumspringgreen, .standard-color-medium-spring-green {  --background: #00fa9a; --border: none;  }
+.standard-color-mediumturquoise, .standard-color-medium-turquoise {  --background: #48d1cc; --border: none;  }
+.standard-color-mediumvioletred, .standard-color-medium-violet-red {  --background: #c71585; --border: none;  }
+.standard-color-midnightblue, .standard-color-midnight-blue {  --background: #191970; --border: none;  }
+.standard-color-mintcream, .standard-color-mint-cream {  --background: #f5fffa; --border: none;  }
+.standard-color-mistyrose, .standard-color-misty-rose {  --background: #ffe4e1; --border: none;  }
+.standard-color-moccasin {  --background: #ffe4b5; --border: none;  }
+.standard-color-navajowhite, .standard-color-navajo-white {  --background: #ffdead;  }
+.standard-color-navy {  --background: #000080; --border: none;  }
+.standard-color-oldlace, .standard-color-old-lace {  --background: #fdf5e6; --border: none;  }
+.standard-color-olive {  --background: #808000; --border: none;  }
+.standard-color-olivedrab, .standard-color-olive-drab {  --background: #6b8e23; --border: none;  }
+.standard-color-orange {  --background: #ffa500; --border: none;  }
+.standard-color-orangered, .standard-color-orange-red {  --background: #ff4500; --border: none;  }
+.standard-color-orchid {  --background: #da70d6; --border: none;  }
+.standard-color-palegoldenrod, .standard-color-pale-golden-rod {  --background: #eee8aa; --border: none;  }
+.standard-color-palegreen, .standard-color-pale-green {  --background: #98fb98; --border: none;  }
+.standard-color-paleturquoise, .standard-color-pale-turquoise {  --background: #afeeee; --border: none;  }
+.standard-color-palevioletred, .standard-color-pale-violet-red {  --background: #d87093; --border: none;  }
+.standard-color-papayawhip, .standard-color-papaya-whip {  --background: #ffefd5; --border: none;  }
+.standard-color-peachpuff, .standard-color-peach-puff {  --background: #ffdab9; --border: none;  }
+.standard-color-peru {  --background: #cd853f; --border: none;  }
+.standard-color-pink {  --background: #ffc0cb; --border: none;  }
+.standard-color-plum {  --background: #dda0dd; --border: none;  }
+.standard-color-powderblue, .standard-color-powder-blue {  --background: #b0e0e6; --border: none;  }
+.standard-color-purple {  --background: #800080; --border: none;  }
+.standard-color-red {  --background: #ff0000; --border: none;  }
+.standard-color-rosybrown, .standard-color-rosy-brown {  --background: #bc8f8f; --border: none;  }
+.standard-color-royalblue, .standard-color-royal-blue {  --background: #4169e1; --border: none;  }
+.standard-color-saddlebrown, .standard-color-saddle-brown {  --background: #8b4513; --border: none;  }
+.standard-color-salmon {  --background: #fa8072; --border: none;  }
+.standard-color-sandybrown, .standard-color-sandy-brown {  --background: #f4a460; --border: none;  }
+.standard-color-seagreen, .standard-color-sea-green {  --background: #2e8b57; --border: none;  }
+.standard-color-seashell, .standard-color-sea-shell {  --background: #fff5ee; --border: none;  }
+.standard-color-sienna {  --background: #a0522d; --border: none;  }
+.standard-color-silver {  --background: #c0c0c0; --border: none;  }
+.standard-color-skyblue, .standard-color-sky-blue {  --background: #87ceeb; --border: none;  }
+.standard-color-slateblue, .standard-color-slate-blue {  --background: #6a5acd; --border: none;  }
+.standard-color-slategray, .standard-color-slate-gray {  --background: #708090; --border: none;  }
+.standard-color-slategrey, .standard-color-slate-grey {  --background: #708090; --border: none;  }
+.standard-color-snow {  --background: #fffafa; --border: none;  }
+.standard-color-springgreen, .standard-color-spring-green {  --background: #00ff7f; --border: none;  }
+.standard-color-steelblue, .standard-color-steel-blue {  --background: #4682b4; --border: none;  }
+.standard-color-tan {  --background: #d2b48c; --border: none;  }
+.standard-color-teal {  --background: #008080; --border: none;  }
+.standard-color-thistle {  --background: #d8bfd8; --border: none;  }
+.standard-color-tomato {  --background: #ff6347; --border: none;  }
+.standard-color-turquoise {  --background: #40e0d0; --border: none;  }
+.standard-color-violet {  --background: #ee82ee; --border: none;  }
+.standard-color-wheat {  --background: #f5deb3; --border: none;  }
+.standard-color-whitesmoke, .standard-color-white-smoke {  --background: #f5f5f5;  }
+.standard-color-yellow {  --background: #ffff00; --border: none;  }
+.standard-color-yellowgreen, .standard-color-yellow-green {  --background: #9acd32; --border: none;  }
+.standard-color-transparent {  --background: transparent; --border: none;  }
+
+/* Arrows */
+/* .standard-color-arrow svg {  fill: #FFFFFF; --border: none;  }
+.standard-color-white,
+.standard-color-antiquewhite, .standard-color-antique-white,
+.standard-color-navajowhite, .standard-color-navajo-white,
+.standard-color-floralwhite, .standard-color-floral-white,
+.standard-color-ghostwhite, .standard-color-ghost-white,
+.standard-color-whitesmoke, .standard-color-white-smoke,
+.standard-color-lightgray, .standard-color-light-gray,
+.standard-color-lightslategray, .standard-color-light-slate-gray {
+  .standard-color-arrow svg {
+    fill: #000000;
+  }
+} */

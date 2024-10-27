@@ -1,0 +1,25 @@
+.main-blog h1 {
+  margin-bottom: 6rem;
+}
+
+.main-blog .pagination-wrapper {
+  margin-top: 0;
+}
+
+.blog-articles {
+  row-gap: 4rem;
+  margin-top: 6rem;
+  padding-top: 8rem;
+  border-top: 0.1rem solid rgba(var(--clr-line),var(--clr-line-alpha));
+}
+
+.main-blog .pagination-wrapper {
+  margin-top: 4rem;
+  margin-bottom: 0;
+}
+
+@media screen and (min-width: 577px) {
+  .main-blog .pagination-wrapper {
+    margin-top: 8rem;
+  }
+}

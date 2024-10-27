@@ -1,0 +1,84 @@
+<style>
+    .theme-icons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 8rem;
+        padding: 6rem 0;
+        border-top: 0.1rem solid rgba(var(--clr-line), var(--clr-line-alpha));
+        text-align: center;
+    }
+
+    @media screen and (min-width: 577px) {
+      .theme-icons {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    @media screen and (min-width: 993px) {
+      .theme-icons {
+        grid-template-columns: repeat(10, 1fr);
+      }
+    }
+
+    .theme-icons__icon {
+      height: 10.3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      -webkit-transition-duration: .3s;
+      transition-duration: .3s;
+      -webkit-transition-property: color, background-color;
+      transition-property: color, background-color;
+      color: rgb(var(--clr-theme-base));
+      cursor: pointer;
+    }
+
+    .theme-icons__icon svg {
+      width: 4rem;
+      height: 4rem
+    }
+
+    .theme-icons__icon span {
+      margin-top: 0.5rem;
+    }
+
+    .theme-icons__icon.copied span::after {
+      content: ' (Copied)';
+    }
+
+    .theme-icons__icon:hover {
+      background-color: rgba(var(--clr-theme-base), 0.03);
+    }
+</style>
+
+{%- assign icons = 'icon-3d-model,icon-accordion,icon-account,icon-arrow-down,icon-arrow-left,icon-arrow-right,icon-arrow-up,icon-arrow,icon-bag,icon-basket,icon-caret,icon-cart-empty,icon-cart,icon-categories,icon-check-solid,icon-check,icon-checkmark,icon-clipboard,icon-clock,icon-close-small,icon-close,icon-copy,icon-discount,icon-error,icon-eye,icon-filter,icon-hamburger,icon-location,icon-lock,icon-mail,icon-minus,icon-newslatter,icon-padlock,icon-pause,icon-phone,icon-play,icon-plus,icon-remove,icon-search,icon-share,icon-social-facebook,icon-social-instagram,icon-social-pinterest,icon-social-snapchat,icon-social-tiktok,icon-social-tumblr,icon-social-twitter,icon-social-vimeo,icon-social-youtube,icon-star,icon-success,icon-theme-antique-solid,icon-theme-antique,icon-theme-armchair-1-solid,icon-theme-armchair-1,icon-theme-armchair-2-solid,icon-theme-armchair-2,icon-theme-armchair-3-solid,icon-theme-armchair-3,icon-theme-arrow-down-solid,icon-theme-arrow-down,icon-theme-arrow-left-solid,icon-theme-arrow-left,icon-theme-arrow-right-solid,icon-theme-arrow-right,icon-theme-arrow-up-solid,icon-theme-arrow-up,icon-theme-art-solid,icon-theme-art,icon-theme-bag-solid,icon-theme-bag,icon-theme-basket-solid,icon-theme-basket,icon-theme-bed-solid,icon-theme-bed,icon-theme-bikini-1-solid,icon-theme-bikini-1,icon-theme-bikini-solid,icon-theme-bikini,icon-theme-blazer-solid,icon-theme-blazer,icon-theme-bookcase-solid,icon-theme-bookcase,icon-theme-box-solid,icon-theme-box,icon-theme-brightness-solid,icon-theme-brightness,icon-theme-cabinet-1-solid,icon-theme-cabinet-1,icon-theme-cabinet-solid,icon-theme-cabinet,icon-theme-camera-solid,icon-theme-camera,icon-theme-car-solid,icon-theme-car,icon-theme-cart-solid,icon-theme-cart,icon-theme-categories,icon-theme-certified-solid,icon-theme-certified,icon-theme-chair-1-solid,icon-theme-chair-1,icon-theme-chair-2-solid,icon-theme-chair-2,icon-theme-chair-solid,icon-theme-chair,icon-theme-chaise-longue-solid,icon-theme-chaise-longue,icon-theme-champagne-solid,icon-theme-champagne,icon-theme-chandelier-1-solid,icon-theme-chandelier-1,icon-theme-chandelier-solid,icon-theme-chandelier,icon-theme-chat-solid,icon-theme-chat,icon-theme-check-solid,icon-theme-check,icon-theme-clock-solid,icon-theme-clock,icon-theme-coffee-maker-1-solid,icon-theme-coffee-maker-1,icon-theme-coffee-maker-solid,icon-theme-coffee-maker,icon-theme-color-temperature-solid,icon-theme-color-temperature,icon-theme-cpu-solid,icon-theme-cpu,icon-theme-cupboard-solid,icon-theme-cupboard,icon-theme-desk-solid,icon-theme-desk,icon-theme-diamond-solid,icon-theme-diamond,icon-theme-dimensions-solid,icon-theme-dimensions,icon-theme-dishwasher-solid,icon-theme-dishwasher,icon-theme-dress-solid,icon-theme-dress,icon-theme-drone-solid,icon-theme-drone,icon-theme-earphone-solid,icon-theme-earphone,icon-theme-eco-friendly-lighting-solid,icon-theme-eco-friendly-lighting,icon-theme-energy-free-solid,icon-theme-energy-free,icon-theme-energy-solid,icon-theme-energy,icon-theme-extractor-hood-solid,icon-theme-extractor-hood,icon-theme-frame-2,icon-theme-free-solid,icon-theme-free,icon-theme-fridge-1-solid,icon-theme-fridge-1,icon-theme-fridge-solid,icon-theme-fridge,icon-theme-gamepad-solid,icon-theme-gamepad,icon-theme-gears-solid,icon-theme-gears,icon-theme-hair-dryer-solid,icon-theme-hair-dryer,icon-theme-handbag-solid,icon-theme-handbag,icon-theme-hat-1-solid,icon-theme-hat-1,icon-theme-hat-2-solid,icon-theme-hat-2,icon-theme-hat-3-solid,icon-theme-hat-3,icon-theme-headphones-solid,icon-theme-headphones,icon-theme-high-waisted-swimsuit-solid,icon-theme-high-waisted-swimsuit,icon-theme-keyboard-solid,icon-theme-keyboard,icon-theme-knife-solid,icon-theme-knife,icon-theme-lamp-1-solid,icon-theme-lamp-1,icon-theme-lamp-solid,icon-theme-lamp,icon-theme-laptop-solid,icon-theme-laptop,icon-theme-laundry-solid,icon-theme-laundry,icon-theme-lawnmower-solid,icon-theme-lawnmower,icon-theme-lipstick-solid,icon-theme-location-solid,icon-theme-location,icon-theme-long-lifespan-solid,icon-theme-long-lifespan,icon-theme-mail-solid,icon-theme-mail,icon-theme-material-solid,icon-theme-material,icon-theme-microwave-solid,icon-theme-microwave,icon-theme-mirror-solid,icon-theme-mirror,icon-theme-mobile-solid,icon-theme-mobile,icon-theme-money-back-solid,icon-theme-money-back,icon-theme-monitor-solid,icon-theme-monitor,icon-theme-monokini-solid,icon-theme-monokini,icon-theme-mouse-solid,icon-theme-mouse,icon-theme-necklace-solid,icon-theme-necklace,icon-theme-next-day-solid,icon-theme-next-day,icon-theme-number-1-solid,icon-theme-number-1,icon-theme-number-10-solid,icon-theme-number-10,icon-theme-number-2-solid,icon-theme-number-2,icon-theme-number-3-solid,icon-theme-number-3,icon-theme-number-4-solid,icon-theme-number-4,icon-theme-number-5-solid,icon-theme-number-5,icon-theme-number-6-solid,icon-theme-number-6,icon-theme-number-7-solid,icon-theme-number-7,icon-theme-number-8-solid,icon-theme-number-8,icon-theme-number-9-solid,icon-theme-number-9,icon-theme-oven-1,icon-theme-oven,icon-theme-pants-solid,icon-theme-pants,icon-theme-partner-solid,icon-theme-partner,icon-theme-paw-solid,icon-theme-paw,icon-theme-perfume-solid,icon-theme-perfume,icon-theme-phone-solid,icon-theme-phone,icon-theme-pot-solid,icon-theme-pot,icon-theme-power-bank-solid,icon-theme-power-bank,icon-theme-pyramid-solid,icon-theme-pyramid,icon-theme-radio-solid,icon-theme-radio,icon-theme-ring-solid,icon-theme-ring,icon-theme-robot-vacuum-cleaner-solid,icon-theme-robot-vacuum-cleaner,icon-theme-rotating-solid,icon-theme-rotating,icon-theme-sale-solid,icon-theme-sale,icon-theme-scooter-solid,icon-theme-scooter,icon-theme-sculptures-solid,icon-theme-sculptures,icon-theme-search-solid,icon-theme-search,icon-theme-security-camera-solid,icon-theme-security-camera,icon-theme-shoes-1-solid,icon-theme-shoes-1,icon-theme-shoes-2-solid,icon-theme-shoes-2,icon-theme-shoes-3-solid,icon-theme-shoes-3,icon-theme-smart-home-solid,icon-theme-smart-home,icon-theme-soap-1,icon-theme-soap-solid,icon-theme-soap,icon-theme-sofa-1-solid,icon-theme-sofa-1,icon-theme-sofa-2-solid,icon-theme-sofa-2,icon-theme-speaker-solid,icon-theme-speaker,icon-theme-star-solid,icon-theme-star,icon-theme-stool-solid,icon-theme-stool,icon-theme-store-solid,icon-theme-store,icon-theme-sunglasses-solid,icon-theme-sunglasses,icon-theme-swimsuit-solid,icon-theme-swimsuit,icon-theme-t-shirt-solid,icon-theme-t-shirt,icon-theme-table-1-solid,icon-theme-table-1,icon-theme-table-2-solid,icon-theme-table-2,icon-theme-table-3-solid,icon-theme-table-3,icon-theme-tableware-solid,icon-theme-tableware,icon-theme-tankini-solid,icon-theme-tankini,icon-theme-teapot-solid,icon-theme-teapot,icon-theme-tie-solid,icon-theme-tie,icon-theme-time-solid,icon-theme-time,icon-theme-toaster-solid,icon-theme-toaster,icon-theme-touch-screen-solid,icon-theme-touch-screen,icon-theme-toy-solid,icon-theme-toy,icon-theme-trikini-solid,icon-theme-trikini,icon-theme-truck-solid,icon-theme-truck,icon-theme-Union-1,icon-theme-Union,icon-theme-vacuum-cleaner-solid,icon-theme-vacuum-cleaner,icon-theme-Vector,icon-theme-voice-assistant-solid,icon-theme-voice-assistant,icon-theme-vr-solid,icon-theme-vr,icon-theme-watch-solid,icon-theme-watch,icon-theme-weight-solid,icon-theme-weight,icon-theme-whisk-solid,icon-theme-whisk,icon-theme-wine-glasses-solid,icon-theme-wine-glasses,icon-tick,icon-truck,icon-unavailable,icon-zoom,svg-logo' | split: ',' -%}
+<div class="page-width">
+  <h1 class="main-page-title page-title h0 heading-case">
+    {{ page.title | escape }}
+  </h1>
+  <div class="theme-icons">
+    {%- for icon_name in icons -%}
+      {%- unless icon_name contains 'theme-' -%}
+        {%- continue -%}
+      {%- endunless -%}
+      <div class="theme-icons__icon">
+        {% capture icon_html %}{% include icon_name %}{% endcapture %}
+        <i>{{ icon_html | replace: '<svg', '<svg width="40" height="40"' }}</i>
+        <span>{{ icon_name | remove: 'icon-theme-' }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+    const icons = document.querySelectorAll('.theme-icons__icon');
+
+    icons.forEach(element => element.addEventListener('click', function(e) {
+      const svg = this.querySelector('span').innerHTML;
+
+      navigator.clipboard.writeText(svg);
+      icons.forEach(el => el.classList.remove('copied'));
+      this.classList.add('copied');
+    }));
+</script>

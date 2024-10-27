@@ -1,0 +1,8 @@
+{%- if color.alpha > 0 -%}
+    {%- assign this_color = color -%}
+{%- elsif default_color != blank -%}
+    {%- assign this_color = default_color -%}
+{%- endif -%}
+{%- assign brightness_difference = this_color | brightness_difference: '#000000' -%}
+{%- assign limit = limit | default: 128 -%}
+{%- if brightness_difference > limit %}var(--clr-contrast-dark){% else %}var(--clr-contrast-light){% endif -%}

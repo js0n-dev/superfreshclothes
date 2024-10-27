@@ -1,0 +1,13 @@
+{%- if label != blank -%}
+    {%- if color.alpha > 0 -%}
+        {%- style -%}
+            {{ style_id }} {
+                --color-button: {{ color.red }}, {{ color.green }}, {{ color.blue }};
+                {%- if 'primary' contains style -%}
+                    --color-button-text: {% render 'color-contrast' with color: color %};
+                {%- endif -%}
+            }
+        {%- endstyle -%}
+    {%- endif -%}
+    <a{% if link == blank %} role="link" aria-disabled="true"{% else %} href="{{ link }}"{% endif %} class="{% if class != blank %}{{ class }} {% endif %}{% if style == 'link-style' %}link-button{% else %}button button--small-full-width button--{{ style }}{% endif %}">{{ label | escape }}</a>
+{%- endif -%}

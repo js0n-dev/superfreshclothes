@@ -1,0 +1,92 @@
+{%- assign attachedPoint = 'bottom' -%}
+
+{{ 'animated-logo.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .animated-logo__logo::before,
+  .animated-logo .media::before {
+    padding-bottom: {{ 1 | divided_by: settings.logo.aspect_ratio | times: 100 }}%;
+    content: '';
+    display: block;
+  }
+
+  {%- if settings.animated_logo_width > 0 -%}
+    {%- assign animated_logo_width = settings.animated_logo_width -%}
+  {%- endif -%}
+  {%- if settings.enable_page_width -%}
+    {%- if animated_logo_width == blank or settings.page_width < animated_logo_width -%}
+      {%- assign animated_logo_width = settings.page_width -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if animated_logo_width > 0 -%}
+    .animated-logo {
+      --max-width: {{ animated_logo_width | divided_by: 10 }}rem;
+    }
+  {%- endif -%}
+</style>
+
+<div class="animated-logo-wrapper gradient">
+  <animated-logo 
+    id="animated-logo" 
+    class="animated-logo{% if settings.header_layout contains 'center' %} animated-logo--centered{% endif %}{% if request.design_mode == true %} animated-logo--initialized animated-logo--design-mode{% endif %}"
+    data-attached-point="{{ attachedPoint }}"
+    data-delay="{{ settings.fullwidth_logo_delay | default: 0 }}"
+  >
+    <div class="page-width">
+        {% capture picture_html %}
+          {%- if settings.enable_logo -%}
+            {%- if settings.logo != blank -%}
+              <div class="animated-logo__element animated-logo__logo">
+                <div class="media">
+                  <img
+                    srcset="{%- if settings.logo.width >= 375 -%}{{ settings.logo | img_url: '375x' }} 375w,{%- endif -%}
+                      {%- if settings.logo.width >= 750 -%}{{ settings.logo | img_url: '750x' }} 750w,{%- endif -%}
+                      {%- if settings.logo.width >= 1100 -%}{{ settings.logo | img_url: '1100x' }} 1100w,{%- endif -%}
+                      {%- if settings.logo.width >= 1500 -%}{{ settings.logo | img_url: '1500x' }} 1500w,{%- endif -%}
+                      {%- if settings.logo.width >= 1780 -%}{{ settings.logo | img_url: '1780x' }} 1780w,{%- endif -%}
+                      {%- if settings.logo.width >= 2000 -%}{{ settings.logo | img_url: '2000x' }} 2000w,{%- endif -%}
+                      {%- if settings.logo.width >= 3000 -%}{{ settings.logo | img_url: '3000x' }} 3000w,{%- endif -%}
+                      {%- if settings.logo.width >= 3840 -%}{{ settings.logo | img_url: '3840x' }} 3840w,{%- endif -%}
+                      {{ settings.logo | img_url: 'master' }} {{ settings.logo.width }}w"
+                    sizes="100vw"
+                    src="{{ settings.logo | img_url: '1500x' }}"
+                    loading="lazy"
+                    alt="{{ settings.logo.alt | escape }}"
+                    width="{{ settings.logo.width }}"
+                    height="{{ settings.logo.width | divided_by: settings.logo.aspect_ratio }}"
+                    style="object-position: {{ settings.logo.presentation.focal_point }};"
+                  >
+                </div>
+              </div>
+            {%- else -%}
+                <div class="animated-logo__element animated-logo__svg">
+                  {% if settings.svg_logo != blank %}{{ settings.svg_logo }}{% else %}{% render 'svg-logo' %}{% endif %}
+                </div>
+            {%- endif -%}
+          {%- else -%}
+            <span class="animated-logo__element animated-logo__text h2">
+              {{ shop.name }}
+            </span>
+          {%- endif -%}
+        {% endcapture %}
+        <div id="animated-logo-picture" class="animated-logo__picture">
+          {{ picture_html }}
+          <div class="animated-logo__absolute-pictures-wrapper">
+            <div id="animated-logo-absolute-picture" class="animated-logo__absolute-picture animated-logo__absolute-picture--{{ attachedPoint }} page-width">
+                {{ picture_html }}
+            </div>
+          </div>
+          <div class="animated-logo__absolute-pictures-wrapper animated-logo__absolute-pictures-wrapper--transparent">
+            <div id="animated-logo-absolute-picture-transparent" class="animated-logo__absolute-picture animated-logo__absolute-picture--{{ attachedPoint }} animated-logo__absolute-picture--transparent page-width">
+              {{ picture_html }}
+            </div>
+          </div>
+        </div>
+    </div>
+  </animated-logo>
+</div>
+
+{%- if request.design_mode != true -%}
+  <script src="{{ 'animated-logo.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

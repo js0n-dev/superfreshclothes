@@ -1,0 +1,39 @@
+<style>
+    back-to-top .link-button {
+        --color-button: var(--clr-theme-accent);
+    }
+</style>
+
+<back-to-top>
+    <a href="#" class="link-button">{{ 'general.back_to_top' | t }}</a>
+</back-to-top>
+
+<script>
+    class BackToTop extends HTMLElement {
+        constructor() {
+            super();
+            this.lastScrollY = 0;
+            this.limit = 800;
+            this.duration = 1500;
+            this.button = this.querySelector('a');
+
+            this.button.addEventListener('click', this.onClick.bind(this));
+        }
+
+        onClick(event) {
+            event.preventDefault();
+
+            document.body.classList.add('body-scroll-top');
+            setTimeout(() => document.body.classList.add('body-scroll-top--animated'));
+
+            animation.scrollTop(0, {
+                duration: this.duration,
+                complete: () => {
+                    document.body.classList.remove('body-scroll-top--animated');
+                }
+            }); 
+        }
+    }
+
+    customElements.define('back-to-top⬆', BackToTop);
+</script>

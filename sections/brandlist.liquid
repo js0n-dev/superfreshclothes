@@ -1,0 +1,463 @@
+{{ 'section-brandlist.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+  {%- if section.settings.title_color.alpha > 0 -%}
+    #BrandListSection-{{ section.id }} .heading-wrapper__heading {
+      color: rgb({{ section.settings.title_color.red }}, {{ section.settings.title_color.green }}, {{ section.settings.title_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.description_color.alpha > 0 -%}
+    #BrandListSection-{{ section.id }} .heading-wrapper__text {
+      color: rgb({{ section.settings.description_color.red }}, {{ section.settings.description_color.green }}, {{ section.settings.description_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.blocks_heading_color.alpha > 0 -%}
+    #BrandListSection-{{ section.id }} .brandlist-card__info h3 {
+      color: rgb({{ section.settings.blocks_heading_color.red }}, {{ section.settings.blocks_heading_color.green }}, {{ section.settings.blocks_heading_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.button_label != blank -%}
+    {%- if section.settings.button_color.alpha > 0 -%}
+          #BrandListSection-{{ section.id }} .section-buttons *:nth-child(1) {
+              --color-button: {{ section.settings.button_color.red }}, {{ section.settings.button_color.green }}, {{ section.settings.button_color.blue }};
+              {%- if 'primary' contains section.settings.button_style -%}
+                  --color-button-text: {% render 'color-contrast' with color: section.settings.button_color %};
+              {%- endif -%}
+          }
+    {%- endif -%}
+  {%- endif -%}
+{%- endstyle -%}
+
+<div id="BrandListSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="brandlist section-{{ section.id }}-padding{% if section.settings.title == blank %} no-heading{% endif %}">
+    <div class="page-width">
+      <slider-component class="slider-mobile-gutter">
+        <div class="grid-bs">
+          {% include 'section-heading-capture' %}
+
+          <ul class="g-col-12 grid-bs list-unstyled{% if section.settings.swipe_on_mobile and section.blocks.size > 1 %} slider slider--mobile grid--peek{% endif %}">
+            {% include 'section-heading-column'  %}
+
+            {%- liquid
+              assign highest_ratio = 0
+              for block in section.blocks
+                if block.settings.image.aspect_ratio > highest_ratio
+                  assign highest_ratio = block.settings.image.aspect_ratio
+                endif
+              endfor
+            -%}
+            {%- for block in section.blocks -%}
+              <li class="g-col-6 g-col-sm-4 g-col-md-{{ 12 | divided_by: section.settings.brands_in_row }}  slider__slide" {{ block.shopify_attributes }}>
+                <div class="brandlist-list__item{% if section.settings.column_alignment == 'center' %} center{% endif %} animated-appearance">
+                  <div class="brandlist-card hover-animation-global link-underlined-trigger">
+                    {%- if block.settings.image != blank -%}
+                      {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
+                        {% assign spaced_image = true %}
+                      {% endif %}
+                      <{% if block.settings.link != blank %}a href="{{ block.settings.link }}" aria-label="Brand"{% else %}div{% endif %} class="brandlist-card__image-wrapper link-unstyled">
+                        <div class="media media--transparent media--{{ section.settings.image_ratio }}"
+                          {% if section.settings.image_ratio == 'adapt' %}
+                            style="padding-bottom: {{ 1 | divided_by: highest_ratio | times: 100 }}%;"
+                          {% endif %}>
+                          <img
+                            srcset="{%- if block.settings.image.width >= 275 -%}{{ block.settings.image | img_url: '275x' }} 275w,{%- endif -%}
+                              {%- if block.settings.image.width >= 550 -%}{{ block.settings.image | img_url: '550x' }} 550w,{%- endif -%}
+                              {%- if block.settings.image.width >= 710 -%}{{ block.settings.image | img_url: '710x' }} 710w,{%- endif -%}
+                              {%- if block.settings.image.width >= 1420 -%}{{ block.settings.image | img_url: '1420x' }} 1420w,{%- endif -%}
+                              {{ block.settings.image | img_url: 'master' }} {{ block.settings.image.width }}w"
+                            src="{{ block.settings.image | img_url: '550x' }}"
+                            sizes="(min-width: 993px) {% if section.blocks.size <= 2 %}710px{% else %}550px{% endif %},
+                              (min-width: 577px) {% if section.blocks.size == 1 %}710px{% else %}550px{% endif %},
+                              calc(100vw - 30px)"
+                            alt="{{ block.settings.image.alt }}"
+                            height="{{ block.settings.image.height }}"
+                            width="{{ block.settings.image.width }}"
+                            loading="lazy"
+                            style="object-position: {{  block.settings.image.presentation.focal_point }};"
+                          >
+                        </div>
+                      </{% if block.settings.link != blank %}a{% else %}div{% endif %}>
+                    {%- else -%}
+                      <div class="brandlist-card__image-wrapper placeholder">
+                        <div class="media media--square">
+                          {% render 'placeholder-by-index', index: forloop.index %}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                    <{% if block.settings.link != blank %}a href="{{ block.settings.link }}"{% else %}div{% endif %} class="brandlist-card__info link-unstyled">
+                      {%- if block.settings.title != blank -%}
+                        <h3 class="h5">
+                          <span class="link-underlined">{{ block.settings.title | escape }}</span>
+                        </h3>
+                      {%- endif -%}
+                      {%- if block.settings.text != blank -%}
+                        <div class="rte">{{ block.settings.text }}</div>
+                      {%- endif -%}
+                    </{% if block.settings.link != blank %}a{% else %}div{% endif %}>
+                  </div>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if section.settings.swipe_on_mobile -%}
+            <div class="g-col-12 hidden">
+              <div class="slider-buttons no-js-hidden{% if section.blocks.size < 2 %} small-hide{% endif %}">
+                <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+                <div class="slider-counter caption">
+                  <span class="slider-counter--current">1</span>
+                  <span aria-hidden="true"> / </span>
+                  <span class="visually-hidden">{{ 'accessibility.of' | t }}</span>
+                  <span class="slider-counter--total">{{ section.blocks.size }}</span>
+                </div>
+                <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
+              </div>
+            </div>
+            <div class="g-col-12 medium-hide large-up-hide">
+              <div class="slider-bullets">
+                {%- for block in section.blocks -%}
+                  <button type="button" class="slider-bullet" name="bullet" aria-label="Slide {{ forloop.index }}"></button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+          {% include 'section-heading-mobile-buttons' %}
+        </div>
+      </slider-component>
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.brandlist.name",
+  "class": "spaced-section spaced-section--full-width",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["custom.megamenu"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Brand list",
+      "label": "t:sections.brandlist.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.brandlist.settings.title_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.brandlist.settings.title_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.brandlist.settings.title_size.options__3.label"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.brandlist.settings.title_size.label"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "t:sections.brandlist.settings.title_color.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Give customers details about brands available at your store</p>",
+      "label": "t:sections.brandlist.settings.description.label"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.brandlist.settings.description_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.brandlist.settings.header__1"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "in-grid-heading",
+          "label": "t:sections.brandlist.settings.layout.options__1.label"
+        },
+        {
+          "value": "heading-on-top",
+          "label": "t:sections.brandlist.settings.layout.options__2.label"
+        },
+        {
+          "value": "heading-on-top-center",
+          "label": "t:sections.brandlist.settings.layout.options__3.label"
+        }
+      ],
+      "default": "in-grid-heading",
+      "label": "t:sections.brandlist.settings.layout.label"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile_align",
+      "options": [
+        {
+          "value": "auto",
+          "label": "t:sections.global.layout_mobile_align.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.global.layout_mobile_align.options__2.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.global.layout_mobile_align.options__3.label"
+        }
+      ],
+      "default": "auto",
+      "label": "t:sections.global.layout_mobile_align.label"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "header",
+      "content": "t:sections.brandlist.settings.header__2"
+    },
+    {
+      "type": "select",
+      "id": "brands_in_row",
+      "options": [
+        {
+          "value": "4",
+          "label": "t:sections.brandlist.settings.brands_in_row.options__1.label"
+        },
+        {
+          "value": "6",
+          "label": "t:sections.brandlist.settings.brands_in_row.options__2.label"
+        }
+      ],
+      "default": "6",
+      "label": "t:sections.brandlist.settings.brands_in_row.label"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.brandlist.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.brandlist.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.brandlist.settings.image_ratio.options__3.label"
+        },
+        {
+          "value": "circle",
+          "label": "t:sections.brandlist.settings.image_ratio.options__4.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.brandlist.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.brandlist.settings.column_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.brandlist.settings.column_alignment.options__2.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.brandlist.settings.column_alignment.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": false,
+      "label": "t:sections.brandlist.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.brandlist.settings.header__3"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Button",
+      "label": "t:sections.all.button_label.label",
+      "info": "t:sections.all.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.all.button_link.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.options__2.label"
+        },
+        {
+          "value": "link-style",
+          "label": "t:sections.all.button_style.options__3.label"
+        }
+      ],
+      "default": "primary",
+      "label": "t:sections.all.button_style.label"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:sections.all.button_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.brandlist.settings.header__4"
+    },
+    {
+      "type": "color",
+      "id": "blocks_heading_color",
+      "label": "t:sections.brandlist.settings.blocks_heading_color.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "t:sections.brandlist.blocks.column.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.brandlist.blocks.column.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Brand name",
+          "label": "t:sections.brandlist.blocks.column.settings.title.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.brandlist.blocks.column.settings.link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.brandlist.presets.name",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

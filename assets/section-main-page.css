@@ -1,0 +1,27 @@
+.page-title {
+  margin: 0;
+}
+
+.main-page .rte {
+  margin-top: 3rem;
+}
+
+@media screen and (min-width: 577px) {
+  .main-page .rte {
+    margin-top: 4rem;
+  }
+}
+
+.page-placeholder-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.page-placeholder {
+  width: 52.5rem;
+  height: 52.5rem;
+}
+
+.page-section .rte {
+  overflow: hidden;
+}

@@ -1,0 +1,360 @@
+{%- style -%}
+  {% render 'section-padding', section: section %}
+  {%- if section.settings.title_color.alpha > 0 -%}
+    #CountdownTimerSection-{{ section.id }} .heading-wrapper__heading .title {
+      color: rgb({{ section.settings.title_color.red }}, {{ section.settings.title_color.green }}, {{ section.settings.title_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.description_color.alpha > 0 -%}
+      #CountdownTimerSection-{{ section.id }} .heading-wrapper__text {
+        color: rgb({{ section.settings.description_color.red }}, {{ section.settings.description_color.green }}, {{ section.settings.description_color.blue }});
+      }
+  {%- endif -%}
+{%- endstyle -%}
+
+{%- if section.settings.button_label != blank -%}
+    {%- if section.settings.button_color.alpha > 0 -%}
+        {%- style -%}
+            #CountdownTimerSection-{{ section.id }} .section-buttons *:nth-child(1) {
+                --color-button: {{ section.settings.button_color.red }}, {{ section.settings.button_color.green }}, {{ section.settings.button_color.blue }};
+                {%- if 'primary' contains section.settings.button_style -%}
+                    --color-button-text: {% render 'color-contrast' with color: section.settings.button_color %};
+                {%- endif -%}
+            }
+        {%- endstyle -%}
+    {%- endif -%}
+{%- endif -%}
+
+{%- capture sizes -%}
+  {%- if settings.enable_page_width -%}
+    (min-width: {{ settings.page_width }}px) calc(({{ settings.page_width | times: 0.33 | round }}px - 4rem)),
+  {%- endif -%}
+  (min-width: 993px) calc(33vw - 4rem), (min-width: 577px) calc(50vw - 3rem), calc(50vw - 4rem)
+{%- endcapture -%}
+<style>
+  #after-countdown h1{
+    color:white !important;
+  }
+  @media screen and (max-width: 767px) {
+.grid-bs .g-col-12 {
+    grid-column: auto / span 8;
+}
+  }
+</style>
+<div id="CountdownTimerSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="countdown-timer section-{{ section.id }}-padding page-width">
+    <div class="countdown-timer__grid grid-bs">
+      {%- if section.settings.image_1 != blank -%}
+        <div class="countdown-timer__image g-col-6 g-col-md-4">
+          <div class="media media--transparent media--{{ section.settings.image_ratio }}"
+            {% if section.settings.image_ratio == 'adapt' %}
+              style="padding-bottom: {{ 1 | divided_by: section.settings.image_1.aspect_ratio | times: 100 }}%;"
+            {% endif %}>
+            <img
+              srcset="{%- if section.settings.image_1.width >= 275 -%}{{ section.settings.image_1 | img_url: '275x' }} 275w,{%- endif -%}
+                {%- if section.settings.image_1.width >= 550 -%}{{ section.settings.image_1 | img_url: '550x' }} 550w,{%- endif -%}
+                {%- if section.settings.image_1.width >= 710 -%}{{ section.settings.image_1 | img_url: '710x' }} 710w,{%- endif -%}
+                {%- if section.settings.image_1.width >= 1420 -%}{{ section.settings.image_1 | img_url: '1420x' }} 1420w,{%- endif -%}
+                {{ section.settings.image_1 | img_url: 'master' }} {{ section.settings.image_1.width }}w"
+              src="{{ section.settings.image_1 | img_url: '550x' }}"
+              sizes="{{ sizes }}"
+              alt="{{ section.settings.image_1.alt }}"
+              height="{{ section.settings.image_1.height }}"
+              width="{{ section.settings.image_1.width }}"
+              loading="lazy"
+              style="object-position: {{ section.settings.image_1.presentation.focal_point }};"
+            >
+          </div>
+        </div>
+      {%- endif -%}
+      <div class="countdown-timer__content grid-bs g-col-12{% if section.settings.image_1 != blank or section.settings.image_2 != blank %} g-col-md-4{% endif %}">
+        {% include 'section-heading-capture', in_grid_tag: 'div', layout: 'heading-on-top-center', button_label: section.settings.button_label, button_link: section.settings.button_link %}
+        {% include 'section-heading-column' %}
+        <div class="g-col-12 center">
+          {% capture end_date %}{{ section.settings.end_date | date: "%-d %B %Y %H:%M:%S GMT%:z" }}{% endcapture %}
+            {% assign end-date = section.settings.end_date | date: "%-d %B %Y %H:%M:%S GMT%:z" %} 
+          {% render 'time-countdown' with date: end_date, class: 'countdown-timer__time-countdown time-countdown--style-product' %}
+
+        
+            {%- assign current_date = 'now' | date: "%Y-%m-%d" -%}
+            {%- assign target_date = end_date | date: "%Y-%m-%d" -%}
+            
+            {%- if target_date < current_date -%}
+              <div id="after-countdown" style="text-align:center;">
+                      {{ section.settings.end_text }}
+                    </div>
+            {%- endif -%}
+          
+        </div>
+        {% include 'section-heading-mobile-buttons' %}
+      </div>
+      {%- if section.settings.image_2 != blank -%}
+        <div class="countdown-timer__image g-col-6 g-col-md-4">
+          <div class="media media--transparent media--{{ section.settings.image_ratio }}"
+            {% if section.settings.image_ratio == 'adapt' %}
+              style="padding-bottom: {{ 1 | divided_by: section.settings.image_2.aspect_ratio | times: 100 }}%;"
+            {% endif %}>
+            <img
+              srcset="{%- if section.settings.image_2.width >= 275 -%}{{ section.settings.image_2 | img_url: '275x' }} 275w,{%- endif -%}
+                {%- if section.settings.image_2.width >= 550 -%}{{ section.settings.image_2 | img_url: '550x' }} 550w,{%- endif -%}
+                {%- if section.settings.image_2.width >= 710 -%}{{ section.settings.image_2 | img_url: '710x' }} 710w,{%- endif -%}
+                {%- if section.settings.image_2.width >= 1420 -%}{{ section.settings.image_2 | img_url: '1420x' }} 1420w,{%- endif -%}
+                {{ section.settings.image_2 | img_url: 'master' }} {{ section.settings.image_2.width }}w"
+              src="{{ section.settings.image_2 | img_url: '550x' }}"
+              sizes="{{ sizes }}"
+              alt="{{ section.settings.image_2.alt }}"
+              height="{{ section.settings.image_2.height }}"
+              width="{{ section.settings.image_2.width }}"
+              loading="lazy"
+              style="object-position: {{ section.settings.image_2.presentation.focal_point }};"
+            >
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var endDate = "{{ end-date }}"; 
+    var countdownDate = new Date(endDate).getTime();
+
+    function updateCountdown() {
+      var now = new Date().getTime();
+      var timeLeft = countdownDate - now;
+
+      if (timeLeft <= 0) {
+        document.getElementById("countdown-timer").style.display = "none";
+        document.getElementById("after-countdown").style.display = "block";
+        return;
+      }
+
+      var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+</script> 
+{% schema %}
+{
+  "name": "Countdown timer",
+  "tag": "section",
+  "class": "spaced-section",
+  "disabled_on": {
+    "groups": ["custom.megamenu"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Countdown timer",
+      "label": "t:sections.featured-collection.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.imageslist.settings.title_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.imageslist.settings.title_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.imageslist.settings.title_size.options__3.label"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.imageslist.settings.title_size.label"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "t:sections.imageslist.settings.title_color.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Give customers details about the banner image(s) or content on the section.</p>",
+      "label": "t:sections.imageslist.settings.description.label"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.imageslist.settings.description_color.label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Button",
+      "label": "t:sections.all.button_label.label",
+      "info": "t:sections.all.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.all.button_link.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.options__2.label"
+        },
+        {
+          "value": "link-style",
+          "label": "t:sections.all.button_style.options__3.label"
+        }
+      ],
+      "default": "primary",
+      "label": "t:sections.all.button_style.label"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:sections.all.button_color.label"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "End date and time",
+      "default": "30/05/2024 23:00:00",
+      "info": "Format: dd/mm/yyyy hh:mm:ss. In the admin panel, the expired date is replaced with a test date for easy setup."
+    },
+     {
+      "type": "richtext",
+      "id": "end_text",
+      "default": "<p>913 Drop is live. <br>Click the image below and we’ll text you the private password.</p>",
+      "label": "After Countdown Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "First image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Second image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.multicolumn.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.multicolumn.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.multicolumn.settings.image_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.multicolumn.settings.image_ratio.options__4.label"
+        },
+        {
+          "value": "circle",
+          "label": "t:sections.multicolumn.settings.image_ratio.options__5.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.multicolumn.settings.image_ratio.label"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+}
+  ],
+  "presets": [
+    {
+      "name": "Countdown timer"
+    }
+  ]
+}
+{% endschema %}

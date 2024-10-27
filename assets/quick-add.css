@@ -1,0 +1,151 @@
+.quick-add {
+  position: relative;
+  z-index: 1;
+}
+
+.card--card .quick-add {
+  margin: 0 1.3rem 1rem;
+}
+
+.quick-add-modal {
+  box-sizing: border-box;
+  opacity: 0;
+  position: fixed;
+  visibility: hidden;
+  z-index: -1;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(var(--color-foreground), 0.2);
+  height: 100%;
+}
+
+.quick-add-modal[open] {
+  opacity: 1;
+  visibility: visible;
+  z-index: 101;
+}
+
+.quick-add-modal .scroll-trigger.scroll-trigger {
+  animation: none;
+  opacity: 1;
+}
+
+.quick-add-modal__content {
+  --modal-height-offset: 3rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: var(--modal-height-offset) auto 0;
+  width: 100%;
+  background-color: rgb(var(--color-background));
+  overflow: hidden;
+  min-width: 90rem;
+  width: 66%;
+  border-radius: var(--images-border-radius);
+}
+
+@media screen and (min-width: 750px) {
+  .quick-add-modal__content {
+    --modal-height-offset: 10rem;
+    margin-top: var(--modal-height-offset);
+    max-height: calc(100% - var(--modal-height-offset) * 2);
+    overflow-y: auto;
+  }
+}
+
+.quick-add-modal__content img {
+  max-width: 100%;
+}
+
+.quick-add-modal__content-info {
+  --modal-padding: 4rem;
+  display: flex;
+  overflow-y: auto;
+  padding: var(--modal-padding);
+  height: 100%;
+}
+
+.quick-add-modal__content-info > * {
+  height: auto;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.quick-add-modal__content-info > *:not(.product) {
+  display: none !important;
+}
+
+/* quick-add-modal .quick-add-hidden,
+quick-add-modal .product__modal-opener:not(.product__modal-opener--image),
+quick-add-modal .product__media-item:not(:first-child) */
+quick-add-modal .quick-add-hidden,
+quick-add-modal .product__modal-opener:not(.product__modal-opener--image) {
+  display: none !important;
+}
+
+quick-add-modal .slider.slider--mobile {
+  overflow: visible;
+}
+
+@media screen and (min-width: 750px) {
+  quick-add-modal .product--columns .product__media-item:not(.product__media-item--single):not(:only-child) {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  quick-add-modal .thumbnail-slider .thumbnail-list.slider--tablet-up {
+    display: none;
+  }
+}
+
+quick-add-modal .product__title > h1 {
+  display: none;
+}
+
+quick-add-modal .product__title > a {
+  display: block;
+}
+
+quick-add-modal .product-media-container.constrain-height {
+  --viewport-offset: calc((var(--modal-height-offset) + var(--modal-padding) + var(--popup-border-width)) * 2);
+}
+
+@media screen and (min-width: 750px) {
+  quick-add-modal .product-media-container.constrain-height {
+    --constrained-min-height: 400px;
+  }
+}
+
+quick-add-modal .product:not(.featured-product) .product__view-details-wrapper {
+  display: block;
+}
+
+quick-add-modal :is(.product__media-icon, .product__media-toggle) {
+  display: none !important;
+}
+
+.quick-add__submit {
+  min-width: 100%;
+}
+
+.quick-add-modal__toggle {
+  position: absolute;
+  top: 0;
+  left: calc(100% - 4.5rem);
+  right: auto;
+}
+
+quick-add-modal .product ~ div {
+  display: none !important;
+}
+
+quick-add-modal sticky-sidebar {
+  top: 0 !important;
+  position: relative !important;
+}

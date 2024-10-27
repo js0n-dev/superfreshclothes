@@ -1,0 +1,33 @@
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+@media screen and (min-width: 577px) {
+  .newsletter-form {
+    margin: 0 auto;
+    max-width: 36rem;
+  }
+}
+
+.newsletter-form__field-wrapper {
+  width: 100%;
+}
+
+.newsletter-form__message {
+  margin-bottom: 0;
+}
+
+.newsletter-form__message--success {
+  position: static;
+  margin-top: 2rem;
+}
+
+.newsletter-form__button {
+  width: 5rem;
+  margin: 0;
+}

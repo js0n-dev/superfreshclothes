@@ -1,0 +1,24 @@
+{% comment %}
+    Renders a product card placeholder
+
+    Usage:
+    {% render 'product-card-placeholder' %}
+{% endcomment %}
+
+<div class="card-wrapper{% if horizontal_class %} card-wrapper--horizontal{% endif %} animated-appearance">
+  <div class="card-wrapper__inner">
+    <div class="card-wrapper__placeholder">
+      <div class="placeholder media media--square">
+        {% render 'placeholder-by-index', index: index, namespace: 'product-' %}
+      </div>
+    </div>
+    <a class="full-width-link"><span class="visually-hidden">{{ 'onboarding.product_title' | t }}</span></a>
+    <div class="card-information card-information--{{ section.settings.information_align | default: 'left' }}">
+      <div class="card-information__wrapper">
+        <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+        <h3 class="card-information__text text-body">{{ 'products.product.product_name' | t }}</h3>
+        {% render 'price' %}
+      </div>
+    </div>
+  </div>
+</div>

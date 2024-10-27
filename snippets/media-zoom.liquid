@@ -1,0 +1,26 @@
+<media-zoom class="media-zoom quick-add-hidden small-hide medium-hide" data-scale-coef="{{ scale_coef }}">
+    <div class="media-zoom__width">
+        <div class="media-zoom__container">
+            <div class="media-zoom__container-ratio" style="padding-top: {{ 1 | divided_by: media.preview_image.aspect_ratio | times: 100 }}%;">
+                <div class="media-zoom__container-zoomed">
+                    <div class="media-zoom__zoom-image media" style="padding-top: {{ 1 | divided_by: media.preview_image.aspect_ratio | times: 100 }}%;">
+                        <img
+                            srcset="{% if media.preview_image.width >= 288 %}{{ media.preview_image | img_url: '288x', scale: scale_coef }} 288w,{% endif %}
+                                {% if media.preview_image.width >= 576 %}{{ media.preview_image | img_url: '576x', scale: scale_coef }} 576w,{% endif %}
+                                {% if media.preview_image.width >= 750 %}{{ media.preview_image | img_url: '750x', scale: scale_coef }} 750w,{% endif %}
+                                {% if media.preview_image.width >= 1100 %}{{ media.preview_image | img_url: '1100x', scale: scale_coef }} 1100w,{% endif %}
+                                {% if media.preview_image.width >= 1500 %}{{ media.preview_image | img_url: '1500x', scale: scale_coef }} 1500w,{% endif %}
+                                {{ media.preview_image | img_url: 'master' }} {{ media.preview_image.width }}w"
+                            src="{{ media | img_url: '1500x', scale: scale_coef }}"
+                            sizes="(min-width: 577px) calc((100vw - 4rem) / 2), calc(100vw - 4rem)"
+                            loading="lazy"
+                            width="576"
+                            height="{{ 576 | divided_by: media.preview_image.aspect_ratio | ceil }}"
+                            alt="{{ media.preview_image.alt | escape }}"
+                            >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</media-zoom>

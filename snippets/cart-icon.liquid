@@ -1,0 +1,9 @@
+{%- liquid
+  if settings.cart_icon == 'bag'
+    render 'icon-bag'
+  elsif settings.cart_icon == 'basket'
+    render 'icon-basket'
+  else
+    render 'icon-cart'
+  endif
+-%}

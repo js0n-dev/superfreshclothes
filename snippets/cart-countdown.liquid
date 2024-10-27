@@ -1,0 +1,14 @@
+{%- if enable_countdown -%}
+    <cart-countdown class="cart-countdown {{ class }}">
+        <div class="cart-countdown__info-wrapper">
+            {% render 'icon-padlock' %}
+            <span class="cart-countdown__info">
+                {{ 'general.cart.cart_countdown_html' | t: value: '<span class="cart-countdown__timer">00:00</span>' }}
+            </span>
+        </div>
+        <script>
+            window.cartCountdownLimit = 2;
+        </script>
+    </cart-countdown>
+    <script src="{{ 'cart-countdown.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

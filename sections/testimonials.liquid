@@ -1,0 +1,383 @@
+<link rel="stylesheet" href="{{ 'component-rte.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'section-testimonials.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'section-testimonials.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+  {%- if section.settings.title_color.alpha > 0 -%}
+    #TestimonialsSection-{{ section.id }} .heading-wrapper__heading .title {
+      color: rgb({{ section.settings.title_color.red }}, {{ section.settings.title_color.green }}, {{ section.settings.title_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.description_color.alpha > 0 -%}
+      #TestimonialsSection-{{ section.id }} .heading-wrapper__text {
+        color: rgb({{ section.settings.description_color.red }}, {{ section.settings.description_color.green }}, {{ section.settings.description_color.blue }});
+      }
+  {%- endif -%}
+  {%- if section.settings.view_all_text != blank -%}
+      {%- if section.settings.button_color.alpha > 0 -%}
+              #TestimonialsSection-{{ section.id }} .section-buttons *:nth-child(1) {
+                  --color-button: {{ section.settings.button_color.red }}, {{ section.settings.button_color.green }}, {{ section.settings.button_color.blue }};
+                  {%- if 'primary' contains section.settings.button_style -%}
+                      --color-button-text: {% render 'color-contrast' with color: section.settings.button_color %};
+                  {%- endif -%}
+              }
+      {%- endif -%}
+  {%- endif -%}
+{%- endstyle -%}
+
+
+<div id="TestimonialsSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="testimonials gradient{% if section.settings.full_width %} testimonials--full-width{% endif %} section-{{ section.id }}-padding">
+      <div class="grid-bs">
+        {% include 'section-heading-capture', button_label_1: section.settings.view_all_text, button_link_1: section.settings.view_all_link, in_grid_tag: 'div' %}
+
+        <div class="g-col-12 grid-bs">  
+          {% include 'section-heading-column'  %}
+
+          {%- for block in section.blocks -%}
+            <div class="g-col-12 g-col-sm-6 g-col-md-{{ 12 | divided_by: section.settings.items_in_row }}" {{ block.shopify_attributes }}>
+              <div class="testimonials__content testimonials__content--{{ section.settings.content_text_align }} animated-appearance">
+                <div class="testimonials__stars">
+                  {%- for i in (0..4) -%}
+                    <i class="{% if i < block.settings.stars %}testimonials__star--active{% endif %}">
+                      {% render 'icon-star' %}
+                    </i>
+                  {%- endfor -%}
+                </div>
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="testimonials__heading title {{ section.settings.content_heading_size }}">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="testimonials__text rte">{{ block.settings.text }}</div>
+                {%- endif -%}
+                {%- if block.settings.user != blank -%}
+                  <div class="testimonials__user rte">{{ block.settings.user }}</div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+          {% include 'section-heading-mobile-buttons' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.testimonials.name",
+  "tag": "section",
+  "class": "spaced-section spaced-section--full-width",
+  "disabled_on": {
+    "groups": ["custom.megamenu"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Testimonials",
+      "label": "t:sections.testimonials.blocks.heading.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading_size.options__3.label"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.testimonials.blocks.heading.settings.heading_size.label"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "t:sections.testimonials.settings.title_color.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Give customers details about the banner image(s) or content on the section.</p>",
+      "label": "t:sections.testimonials.settings.description.label"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.testimonials.settings.description_color.label"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "t:sections.testimonials.settings.view_all_text.label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "t:sections.testimonials.settings.view_all_link.label",
+      "info": "t:sections.testimonials.settings.view_all_link.info"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.options__2.label"
+        },
+        {
+          "value": "link-style",
+          "label": "t:sections.all.button_style.options__3.label"
+        }
+      ],
+      "default": "primary",
+      "label": "t:sections.all.button_style.label"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:sections.all.button_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.testimonials.settings.header__1.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "in-grid-heading",
+          "label": "t:sections.testimonials.settings.layout.options__1.label"
+        },
+        {
+          "value": "heading-on-top",
+          "label": "t:sections.testimonials.settings.layout.options__2.label"
+        },
+        {
+          "value": "heading-on-top-center",
+          "label": "t:sections.testimonials.settings.layout.options__3.label"
+        }
+      ],
+      "default": "in-grid-heading",
+      "label": "t:sections.testimonials.settings.layout.label"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile_align",
+      "options": [
+        {
+          "value": "auto",
+          "label": "t:sections.global.layout_mobile_align.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.global.layout_mobile_align.options__2.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.global.layout_mobile_align.options__3.label"
+        }
+      ],
+      "default": "auto",
+      "label": "t:sections.global.layout_mobile_align.label"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "header",
+      "content": "t:sections.testimonials.settings.header__2.content"
+    },
+    {
+      "type": "select",
+      "id": "items_in_row",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.testimonials.settings.items_in_row.options__1.label"
+        },
+        {
+          "value": "4",
+          "label": "t:sections.testimonials.settings.items_in_row.options__2.label"
+        }
+      ],
+      "default": "4",
+      "label": "t:sections.testimonials.settings.items_in_row.label"
+    },
+    {
+      "type": "select",
+      "id": "content_heading_size",
+      "options": [
+        {
+          "value": "h5",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading_size.options__1.label"
+        },
+        {
+          "value": "h4",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading_size.options__2.label"
+        },
+        {
+          "value": "h3",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading_size.options__3.label"
+        }
+      ],
+      "default": "h5",
+      "label": "t:sections.testimonials.settings.content_heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "content_text_align",
+      "options": [
+        {
+          "value": "align-start",
+          "label": "t:sections.testimonials.settings.content_text_align.options__1.label"
+        },
+        {
+          "value": "align-center",
+          "label": "t:sections.testimonials.settings.content_text_align.options__2.label"
+        },
+        {
+          "value": "align-end",
+          "label": "t:sections.testimonials.settings.content_text_align.options__3.label"
+        }
+      ],
+      "default": "align-start",
+      "label": "t:sections.testimonials.settings.content_text_align.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "t:sections.testimonials.blocks.content.name",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "t:sections.testimonials.blocks.content.settings.stars.label"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Heading",
+          "label": "t:sections.testimonials.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Your review text.</p>",
+          "label": "t:sections.testimonials.blocks.text.settings.text.label"
+        },
+        {
+          "type": "richtext",
+          "id": "user",
+          "default": "<p><i>by <b>username</b></i></p>",
+          "label": "t:sections.testimonials.blocks.content.settings.user.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.testimonials.presets.name",
+      "blocks": [
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        },
+        {
+          "type": "content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

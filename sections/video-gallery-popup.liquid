@@ -1,0 +1,258 @@
+{% schema %}
+{
+  "name": "Video Gallery with Popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "disable_popup",
+      "label": "Disable Popup for Video Play",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "gallery_heading",
+      "label": "Gallery Heading",
+      "default": "Product Video"
+    },
+    {
+      "type": "number",
+      "id": "desktop_columns",
+      "label": "Number of Columns on Desktop",
+      "default": 4
+    },
+    {
+      "type": "number",
+      "id": "mobile_columns",
+      "label": "Number of Columns on Mobile",
+      "default": 2
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Select Image"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL",
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Gallery with Popup",
+      "category": "Gallery"
+    }
+  ]
+}
+{% endschema %}
+
+  {% if section.settings.disable_popup %}
+    
+    <div class="product-image-gallery">
+      <h2>{{ section.settings.gallery_heading }}</h2>
+      <div class="gallery" style="
+        --desktop-columns: {{ section.settings.desktop_columns }};
+        --mobile-columns: {{ section.settings.mobile_columns }};
+      ">
+        {% for block in section.blocks %}
+          <div class="gallery-item" data-video-url="{{ block.settings.video_url }}">
+            <img src="{{ block.settings.image | img_url: '600x600' }}" alt="Video Thumbnail" />
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  
+  {% else %}
+    
+    <div class="product-image-gallery">
+      {% if section.settings.gallery_heading != blank %}
+      <h2>{{ section.settings.gallery_heading }}</h2>
+        {% endif %}
+      <div class="gallery" style="
+        --desktop-columns: {{ section.settings.desktop_columns }};
+        --mobile-columns: {{ section.settings.mobile_columns }};
+      ">
+        {% for block in section.blocks %}
+          <div class="gallery-item">
+            <a href="{{ block.settings.video_url }}" class="video-popup" data-video-url="{{ block.settings.video_url }}">
+              <img src="{{ block.settings.image | img_url: '600x600' }}" alt="{{ block.settings.video_url }}" />
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- Popup Modal -->
+    <div id="videoModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="video-container">
+          <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  
+  {% endif %}
+
+
+<style>
+.product-image-gallery {
+  text-align: center;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(var(--desktop-columns, 4), 1fr);
+  gap: 10px;
+  justify-content: center;
+}
+
+.gallery-item {
+  max-width: 100%;
+  position: relative;
+  cursor: pointer;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+  background-color: #000; /* Ensure background color matches video content */
+}
+
+.gallery-item img, .gallery-item iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* object-fit: contain; */
+  border-radius: 8px;
+  border: none; /* Remove any default borders */
+  background-color: #000; /* Background color in case of letterboxing */
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: transparent;
+  margin: 15% auto;
+  padding: 20px;
+  /* border: 1px solid #888; */
+  width: 80%;
+  max-width: 1000px;
+  position: relative;
+  text-align: center;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: 5px;
+  color: #aaa;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(var(--mobile-columns, 2), 1fr);
+  }
+
+  .modal-content {
+    width: 95% !important;
+  }
+
+  .modal-content {
+    bottom: 50px;
+  }
+  
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var modal = document.getElementById("videoModal");
+  var span = document.getElementsByClassName("close")[0];
+  var videoFrame = document.getElementById("videoFrame");
+
+  document.querySelectorAll('.video-popup').forEach(function(element) {
+    element.addEventListener('click', function(event) {
+      event.preventDefault();
+      var videoUrl = this.getAttribute('data-video-url');
+      videoFrame.src = videoUrl.replace("watch?v=", "embed/");
+      modal.style.display = "flex";
+    });
+  });
+
+  span.onclick = function() {
+    modal.style.display = "none";
+    videoFrame.src = "";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      videoFrame.src = "";
+    }
+  }
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var galleryItems = document.querySelectorAll('.gallery-item');
+
+  galleryItems.forEach(function(item) {
+    item.addEventListener('click', function() {
+      var videoUrl = this.getAttribute('data-video-url');
+      var iframe = document.createElement('iframe');
+
+      // Set iframe attributes for YouTube or Vimeo video
+      iframe.setAttribute('src', videoUrl.replace("watch?v=", "embed/") + "?autoplay=1");
+      iframe.setAttribute('allowfullscreen', true);
+      iframe.setAttribute('allow', 'autoplay');
+      iframe.setAttribute('frameborder', '0'); // Remove frame border
+      iframe.setAttribute('scrolling', 'no'); // Disable scrolling
+
+      // Replace the image with the iframe
+      this.innerHTML = '';
+      this.appendChild(iframe);
+    });
+  });
+});
+</script>
+

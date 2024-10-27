@@ -1,0 +1,140 @@
+{{ 'section-popups.css' | asset_url | stylesheet_tag }}
+
+<style>
+    :root {
+        {%- if settings.popups_background_color.alpha > 0 -%}
+            --popups-background: {{ settings.popups_background_color.red }}, {{ settings.popups_background_color.green }}, {{ settings.popups_background_color.blue }};
+        {%- endif -%}
+        {%- if settings.popups_foreground_color.alpha > 0 -%}
+            --popups-foreground: {{ settings.popups_foreground_color.red }}, {{ settings.popups_foreground_color.green }}, {{ settings.popups_foreground_color.blue }};
+        {%- elsif settings.popups_background_color.alpha > 0 -%}
+            --popups-foreground: {% render 'color-contrast' with color: settings.popups_background_color %};
+        {%- endif -%}
+    }
+</style>
+
+<div class="popups">
+    {%- if settings.enable_newsletter_popup -%}
+        <div class="newsletter-popup popups__block">
+            <div class="page-width">
+                <div class="newsletter-popup__content popups__content">
+                    <button type="button" class="popups__close-button link link--text focus-inset js-popup-close" data-popup-namespace="popup-newsletter" data-url-call="customer_posted=true#contact_form" aria-label="{{ 'accessibility.close' | t }}">
+                        <svg class="icon icon-close" aria-hidden="true" focusable="false" role="presentation">
+                            <use href="#icon-close">
+                        </svg>
+                    </button>
+                    {% capture newsletter_paragraph %}{{ 'general.newsletter_popup.paragraph' | t }}{% endcapture %}
+                    {%- if newsletter_paragraph != blank -%}
+                        <p class="newsletter-popup__text h5">{{ newsletter_paragraph }}</p>
+                    {%- endif -%}
+                    {% form 'customer', class: 'newsletter-form' %}
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+                        <div class="newsletter-form__field-wrapper">
+                            <div class="field field--with-icon">
+                                <input
+                                id="PopupNewsletterForm"
+                                type="email"
+                                name="contact[email]"
+                                class="field__input"
+                                value="{{ form.email }}"
+                                aria-required="true"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                autocomplete="email"
+                                {% if form.errors %}
+                                    autofocus
+                                    aria-invalid="true"
+                                    aria-describedby="PopupNewsletter-error"
+                                {% elsif form.posted_successfully? %}
+                                    aria-describedby="PopupNewsletter-success"
+                                {% endif %}
+                                placeholder="{{ 'newsletter.label' | t }}"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                required
+                                >
+                                <label class="field__icon" for="PopupNewsletterForm">
+                                {% render 'icon-newslatter' %}
+                                </label>
+                                <span class="field__label">
+                                    {{ 'newsletter.label' | t }}
+                                </span>
+                                <button type="submit" class="newsletter-form__button field__button small-hide medium-hide" name="commit" id="PopupSubscribe" aria-label="{{ 'newsletter.button_label' | t }}">
+                                    {% render 'icon-arrow' %}
+                                </button>
+                            </div>
+                            {%- if form.errors -%}
+                                <small class="newsletter-form__message form__message" id="PopupNewsletter-error">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</small>
+                            {%- endif -%}
+                        </div>
+                        {%- if form.posted_successfully? -%}
+                            <script>
+                                window.hidePopups = ['popup-newsletter'];
+                            </script>
+                            <h3 class="newsletter-form__message newsletter-form__message--success form__message" id="PopupNewsletter-success" tabindex="-1" autofocus>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>
+                        {%- endif -%}
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+    {%- if settings.enable_cookies_popup -%}
+        <div class="cookie-popup popups__block">
+            <div class="page-width">
+                <div class="cookie-popup__content popups__content">
+                    {% capture cookies_paragraph %}{{ 'general.cookies_popup.paragraph' | t }}{% endcapture %}
+                    {%- if cookies_paragraph != blank -%}
+                        <p class="cookie-popup__text">{{ cookies_paragraph }}</p>
+                    {%- endif -%}
+                    <div class="cookie-popup__buttons">
+                        {% capture cookies_link_button_label %}{{ 'general.cookies_popup.link_button_label' | t }}{% endcapture %}
+                        {%- if cookies_link_button_label != blank -%}
+                            <a href="{{ settings.cookie_popup_link_button_url | default: '/' }}" target="_blank" class="link-button">{{ cookies_link_button_label }}</a>
+                        {%- endif -%}
+                        <button type="button" class="button button--secondary js-popup-close" data-popup-namespace="popup-cookie">{{ 'general.cookies_popup.accept_button_label' | t }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+</div>
+
+{%- unless request.design_mode -%}
+    {%- if settings.enable_age_popup -%}
+        {{ 'age-popup.css' | asset_url | stylesheet_tag }}
+
+        <div class="age-popup no-js-hidden">
+            <age-popup-modal id="AgePopup-age-pupop" class="age-popup-modal page-width">
+                <div
+                    role="dialog"
+                    aria-label="{{ 'general.age_popup.heading_html' | t }}"
+                    aria-modal="true"
+                    class="age-popup-modal__content global-settings-popup"
+                    tabindex="-1"
+                >
+                    <div id="AgePopupInfo-age-pupop" class="age-popup-modal__content-info">
+                        {% capture age_popup_heading %}{{ 'general.age_popup.heading_html' | t }}{% endcapture %}
+                        {%- if age_popup_heading != blank -%}
+                            <h1>{{ age_popup_heading }}</h1>
+                        {%- endif -%}
+                        {% capture age_popup_paragraph %}{{ 'general.age_popup.paragraph' | t }}{% endcapture %}
+                        {%- if age_popup_paragraph != blank -%}
+                            <p>{{ age_popup_paragraph }}</p>
+                        {%- endif -%}
+                        <div class="age-popup-modal__content-buttons">
+                            <button id="ModalClose-age-pupop" type="button" class="button button--secondary">
+                                {{ 'general.age_popup.accept_button' | t }}
+                            </button>
+                            <a href="{{ settings.age_popup_exit_link | default: 'https://www.google.com/' }}" id="AgePopup-button-exit" class="button button--primary">
+                                {{ 'general.age_popup.exit_button' | t }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </age-popup-modal>
+        </div>
+
+        <script src="{{ 'age-popup.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    <script src="{{ 'popups.js' | asset_url }}" defer="defer"></script>
+{%- endunless -%}

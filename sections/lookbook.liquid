@@ -1,0 +1,537 @@
+{{ 'section-lookbook.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'section-lookbook.css' | asset_url }}" media="print" onload="this.media='all'">
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+    {% render 'section-padding', section: section %}
+    {%- if section.settings.title_color.alpha > 0 -%}
+    #LookbookSection-{{ section.id }} .heading-wrapper__heading {
+      color: rgb({{ section.settings.title_color.red }}, {{ section.settings.title_color.green }}, {{ section.settings.title_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.description_color.alpha > 0 -%}
+    #LookbookSection-{{ section.id }} .heading-wrapper__text {
+      color: rgb({{ section.settings.description_color.red }}, {{ section.settings.description_color.green }}, {{ section.settings.description_color.blue }});
+    }
+  {%- endif -%}
+  {%- if section.settings.button_label != blank -%}
+    {%- if section.settings.button_color.alpha > 0 -%}
+          #LookbookSection-{{ section.id }} :is(.lookbook__heading-button, .lookbook__mobile-button, .lookbook__grid-buttons) > * {
+              --color-button: {{ section.settings.button_color.red }}, {{ section.settings.button_color.green }}, {{ section.settings.button_color.blue }};
+              {%- if 'primary' contains section.settings.button_style -%}
+                  --color-button-text: {% render 'color-contrast' with color: section.settings.button_color %};
+              {%- endif -%}
+          }
+    {%- endif -%}
+  {%- endif -%}
+    #LookbookSection-{{ section.id }} .lookbook__styled-product .card-wrapper--horizontal .card-wrapper__inner :is(.card, .card-wrapper__placeholder) {
+        min-width: {{ section.settings.grid_product_width }}%;
+    }
+{%- endstyle -%}
+
+{% capture button_html %}
+    {%- if section.settings.button_type == 'buy_all' -%}
+        <div class="product-forms__button {% render 'button-class' with button_style: section.settings.button_style, button_class: 'button--small-full-width button--medium-full-width' %}">
+            {% render 'cart-icon' %}
+            {{ 'sections.lookbook.buy_all_button' | t }}
+            <div class="loading-overlay__spinner hidden">
+                <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="spinner"
+                    viewBox="0 0 66 66"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+            </div>    
+        </div>
+    {%- elsif section.settings.button_label != blank -%}
+        <a{% if section.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link }}"{% endif %} class="{% render 'button-class' with button_style: section.settings.button_style, button_class: 'button--small-full-width button--medium-full-width' %}">{{ section.settings.button_label | escape }}</a>
+    {%- endif -%}
+{% endcapture %}
+
+<div id="LookbookSection-{{ section.id }}">
+    {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+    <lookbook-section class="lookbook section-{{ section.id }}-padding">
+        <div class="page-width">
+            <{% if section.settings.button_type == 'buy_all' %}product-forms{% else %}div{% endif %} class="lookbook__content lookbook__content--{{ section.settings.layout }}">
+                <div class="lookbook__heading {% if section.settings.layout == '2_columns' %} large-up-hide{% endif %}">
+                    {%- if button_html != blank -%}
+                        <div class="lookbook__heading-button small-hide medium-hide">
+                            {{ button_html }}
+                        </div>
+                    {%- endif -%}
+                    {% include 'section-heading-capture', in_grid: false %}
+                </div>
+                <div class="lookbook__image-wrapper">
+                    {%- if section.settings.image != blank -%}
+                        <div class="lookbook__image media" style="padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;">
+                            <img
+                                srcset="{%- if section.settings.image.width >= 375 -%}{{ section.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 750 -%}{{ section.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 1100 -%}{{ section.settings.image | img_url: '1100x' }} 1100w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 1500 -%}{{ section.settings.image | img_url: '1500x' }} 1500w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 1780 -%}{{ section.settings.image | img_url: '1780x' }} 1780w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 2000 -%}{{ section.settings.image | img_url: '2000x' }} 2000w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 3000 -%}{{ section.settings.image | img_url: '3000x' }} 3000w,{%- endif -%}
+                                    {%- if section.settings.image.width >= 3840 -%}{{ section.settings.image | img_url: '3840x' }} 3840w,{%- endif -%}
+                                    {{ section.settings.image | img_url: 'master' }} {{ section.settings.image.width }}w"
+                                sizes="{% if section.settings.layout == '2_columns' %}(min-width: 993px) 50vw, {% endif %}100vw"
+                                src="{{ section.settings.image | img_url: '1500x' }}"
+                                loading="lazy"
+                                alt="{{ section.settings.image.alt | escape }}"
+                                width="{{ section.settings.image.width }}"
+                                height="{{ section.settings.image.width | divided_by: section.settings.image.aspect_ratio }}"
+                                style="object-position: {{ section.settings.image.presentation.focal_point }};"
+                                >
+                        </div>
+                    {%- else -%}
+                        <div class="placeholder">
+                            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                    {%- endif -%}
+
+                    <ul class="lookbook__pickeres list-unstyled" role="list">
+                        {%- comment %}<locksmith:3061>{% endcomment -%}
+                          {%- assign locksmith_69cd_forloop__size = 0 %}{%- for block in section.blocks -%}{% capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block.settings.product, subject_parent: section, variable: 'transparent' %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_69cd_forloop__size = locksmith_69cd_forloop__size | plus: 1 %}{% endif %}{% endfor %}{% assign locksmith_69cd_forloop__index = nil -%}
+                        {%- comment %}</locksmith:3061>{% endcomment -%}
+                        {%- for block in section.blocks -%}
+                            {%- comment %}<locksmith:8f3c>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block.settings.product, subject_parent: section, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% if locksmith_69cd_forloop__index == nil %}{% assign locksmith_69cd_forloop__index = 1 %}{% assign locksmith_69cd_forloop__index0 = 0 %}{% else %}{% assign locksmith_69cd_forloop__index = locksmith_69cd_forloop__index | plus: 1 %}{% assign locksmith_69cd_forloop__index0 = locksmith_69cd_forloop__index0 | plus: 1 %}{% endif %}{% if locksmith_69cd_forloop__index == 1 %}{% assign locksmith_69cd_forloop__first = true %}{% else %}{% assign locksmith_69cd_forloop__first = false %}{% endif %}{% if locksmith_69cd_forloop__index == locksmith_69cd_forloop__size %}{% assign locksmith_69cd_forloop__last = true %}{% else %}{% assign locksmith_69cd_forloop__last = false %}{% endif %}{% assign locksmith_69cd_forloop__rindex = locksmith_69cd_forloop__size | minus: locksmith_69cd_forloop__index | minus: 1 %}{% assign locksmith_69cd_forloop__rindex0 = locksmith_69cd_forloop__size | minus: locksmith_69cd_forloop__index0 | minus: 1 %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:8f3c>{% endcomment -%}
+                            <li class="lookbook__item lookbook__item--{{ block.settings.align }}" style="top: {{ block.settings.vertical_position }}%;left: {{ block.settings.horizontal_position }}%;" {{ block.shopify_attributes }}>
+                                {%- if section.settings.layout == 'fullwidth' -%}
+                                    <input type="checkbox" class="lookbook__checkbox hidden" id="lookbook-checkbox-{{ section.id }}-{{ block.id }}">
+                                {%- endif -%}
+                                <label class="lookbook__picker" for="lookbook-checkbox-{{ section.id }}-{{ block.id }}"><span></span></label>
+                                {%- if section.settings.layout == 'fullwidth' -%}
+                                    <div class="lookbook__product">
+                                        <div class="lookbook__product-content lookbook__styled-product">
+                                            {%- assign product = all_products[block.settings.product] -%}
+                                            {%- if product != blank -%}
+                                                {% render 'product-card',
+                                                    product_card_product: product,
+                                                    media_size: section.settings.image_ratio,
+                                                    fixed_size: 80,
+                                                    show_secondary_image: false,
+                                                    show_quick_add: false,
+                                                    section_id: section.id,
+                                                    horizontal_class: true,
+                                                    horizontal_quick_add: true,
+                                                    show_vendor: section.settings.show_vendor,
+                                                    show_rating: section.settings.show_rating,
+                                                    show_time_countdown: false,
+                                                    show_picker: false,
+                                                    show_badges: false,
+                                                    custom_image: block.settings.image
+                                                %}
+                                            {%- else -%}
+                                                {% render 'product-card-placeholder', index: locksmith_69cd_forloop__index, horizontal_class: true %}
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                            </li>
+                        {%- endfor -%}
+                    </ul>
+                </div>
+
+                <div class="lookbook__grid-wrapper">
+                    {%- if section.settings.layout == '2_columns' -%}
+                        {% include 'section-heading-column' %}
+                    {%- endif -%}
+                    <div class="lookbook__grid product-forms__products grid-bs{% if section.settings.layout == 'fullwidth' %} large-up-hide{% endif %}">
+                        {%- comment %}<locksmith:e8ec>{% endcomment -%}
+                          {%- assign locksmith_6aa4_forloop__size = 0 %}{%- for block in section.blocks -%}{% capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block.settings.product, subject_parent: section, variable: 'transparent' %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_6aa4_forloop__size = locksmith_6aa4_forloop__size | plus: 1 %}{% endif %}{% endfor %}{% assign locksmith_6aa4_forloop__index = nil -%}
+                        {%- comment %}</locksmith:e8ec>{% endcomment -%}
+                        {%- for block in section.blocks -%}
+                            {%- comment %}<locksmith:628a>{% endcomment -%}
+                              {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block.settings.product, subject_parent: section, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% if locksmith_6aa4_forloop__index == nil %}{% assign locksmith_6aa4_forloop__index = 1 %}{% assign locksmith_6aa4_forloop__index0 = 0 %}{% else %}{% assign locksmith_6aa4_forloop__index = locksmith_6aa4_forloop__index | plus: 1 %}{% assign locksmith_6aa4_forloop__index0 = locksmith_6aa4_forloop__index0 | plus: 1 %}{% endif %}{% if locksmith_6aa4_forloop__index == 1 %}{% assign locksmith_6aa4_forloop__first = true %}{% else %}{% assign locksmith_6aa4_forloop__first = false %}{% endif %}{% if locksmith_6aa4_forloop__index == locksmith_6aa4_forloop__size %}{% assign locksmith_6aa4_forloop__last = true %}{% else %}{% assign locksmith_6aa4_forloop__last = false %}{% endif %}{% assign locksmith_6aa4_forloop__rindex = locksmith_6aa4_forloop__size | minus: locksmith_6aa4_forloop__index | minus: 1 %}{% assign locksmith_6aa4_forloop__rindex0 = locksmith_6aa4_forloop__size | minus: locksmith_6aa4_forloop__index0 | minus: 1 %}{% else %}{% continue %}{% endif -%}
+                            {%- comment %}</locksmith:628a>{% endcomment -%}
+                            <div class="lookbook__column lookbook__styled-product g-col-12 g-col-sm-4 g-col-md-6">
+                                {%- assign product = all_products[block.settings.product] -%}
+                                {%- if product != blank -%}
+                                    {% render 'product-card',
+                                        product_card_product: product,
+                                        media_size: section.settings.image_ratio,
+                                        show_secondary_image: false,
+                                        show_quick_add: false,
+                                        section_id: section.id,
+                                        horizontal_class: true,
+                                        horizontal_quick_add: true,
+                                        show_vendor: section.settings.show_vendor,
+                                        show_rating: section.settings.show_rating,
+                                        show_time_countdown: false,
+                                        show_picker: false,
+                                        show_badges: false,
+                                        custom_image: block.settings.image
+                                    %}
+                                {%- else -%}
+                                    {% render 'product-card-placeholder', index: locksmith_6aa4_forloop__index, horizontal_class: true %}
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                    {%- if section.settings.layout == '2_columns' and button_html != blank -%}
+                        <div class="lookbook__grid-buttons small-hide medium-hide">
+                            {{ button_html }}
+                        </div>
+                    {%- endif -%}
+                </div>
+                {%- if button_html != blank -%}
+                    <div class="lookbook__mobile-button large-up-hide">
+                        {{ button_html }}
+                    </div>
+                {%- endif -%}
+            </{% if section.settings.button_type == 'buy_all' %}product-forms{% else %}div{% endif %}>
+        </div>
+    </lookbook-section>
+    {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+
+{% schema %}
+{
+"name": "Lookbook",
+"disabled_on": {
+    "groups": ["custom.megamenu"]
+},
+"settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Lookbook",
+      "label": "t:sections.imageslist.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.imageslist.settings.title_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.imageslist.settings.title_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.imageslist.settings.title_size.options__3.label"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.imageslist.settings.title_size.label"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "t:sections.imageslist.settings.title_color.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "default": "<p>Since 2014 we have been creating and acquiring pieces for the home, chosen with the purpose to be both artful and functional.</p>",
+      "label": "t:sections.imageslist.settings.description.label"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.imageslist.settings.description_color.label"
+    },
+    {
+        "type": "select",
+        "id": "button_type",
+        "options": [
+        {
+            "value": "buy_all",
+            "label": "Buy all"
+        },
+        {
+            "value": "link_button",
+            "label": "Link button"
+        }
+        ],
+        "label": "Button type",
+        "info": "If the \"Buy all\" option is selected then the \"Label\" and \"Link fields\" fields will be ignored.",
+        "default": "buy_all"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Button",
+      "label": "t:sections.all.button_label.label",
+      "info": "t:sections.all.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.all.button_link.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.options__2.label"
+        },
+        {
+          "value": "link-style",
+          "label": "t:sections.all.button_style.options__3.label"
+        }
+      ],
+      "default": "primary",
+      "label": "t:sections.all.button_style.label"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "t:sections.all.button_color.label"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+    },
+    {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "default": "fullwidth",
+        "options": [
+            {
+                "value": "fullwidth",
+                "label": "Fullwidth"
+            },
+            {
+                "value": "2_columns",
+                "label": "2 columns"
+            }
+        ]
+    },
+    {
+      "type": "header",
+      "content": "Product card"
+    },
+    {
+        "type": "select",
+        "id": "image_ratio",
+        "options": [
+        {
+            "value": "adapt",
+            "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options__1.label"
+        },
+        {
+            "value": "portrait",
+            "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options__2.label"
+        },
+        {
+            "value": "square",
+            "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options__3.label"
+        },
+        {
+            "value": "landscape",
+            "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options__4.label"
+        },
+        {
+            "value": "circle",
+            "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.options__5.label"
+        }
+        ],
+        "label": "t:sections.main-product.blocks.complementary_products.settings.image_ratio.label",
+        "default": "portrait"
+    },
+    {
+        "type": "range",
+        "id": "grid_product_width",
+        "min": 20,
+        "max": 60,
+        "step": 1,
+        "unit": "%",
+        "default": 34,
+        "label": "Image width in grid"
+    },
+    
+    {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "default": false,
+        "label": "t:sections.main-product.blocks.complementary_products.settings.show_vendor.label"
+    },
+    
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+}
+],
+"blocks": [
+    {
+        "type": "product",
+        "name": "Product",
+        "limit": 6,
+        "settings": [
+            {
+                "type": "product",
+                "id": "product",
+                "label": "Product"
+            },
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Product image"
+            },
+            {
+                "type": "range",
+                "id": "horizontal_position",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "default": 50,
+                "label": "Horizontal position"
+            },
+            {
+                "type": "range",
+                "id": "vertical_position",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "unit": "%",
+                "default": 50,
+                "label": "Vertical position"
+            },
+            {
+                "type": "select",
+                "id": "align",
+                "options": [
+                {
+                    "value": "top",
+                    "label": "Top"
+                },
+                {
+                    "value": "bottom",
+                    "label": "Bottom"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+                ],
+                "label": "Align",
+                "default": "top"
+            }
+            
+        ]
+    }
+],
+"presets": [
+    {
+        "name": "Lookbook",
+        "blocks": [
+            {
+                "type": "product",
+                "settings": {
+                    "horizontal_position": 20,
+                    "vertical_position": 20,
+                    "align": "bottom"
+                }
+            },
+            {
+                "type": "product",
+                "settings": {
+                    "horizontal_position": 50,
+                    "vertical_position": 50
+                }
+            },
+            {
+                "type": "product",
+                "settings": {
+                    "horizontal_position": 80,
+                    "vertical_position": 15,
+                    "align": "bottom"
+                }
+            },
+            {
+                "type": "product",
+                "settings": {
+                    "horizontal_position": 90,
+                    "vertical_position": 75,
+                    "align": "left"
+                }
+            }
+        ]
+    }
+]
+}
+{% endschema %}

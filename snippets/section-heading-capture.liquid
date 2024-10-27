@@ -1,0 +1,80 @@
+{%- assign layout = layout | default: section.settings.layout -%}
+{%- assign button_label_1 = button_label_1 | default: section.settings.button_label | default: section.settings.button_label_1 -%}
+{%- assign button_link_1 = button_link_1 | default: section.settings.button_link | default: section.settings.button_link_1 -%}
+{%- assign button_label_2 = section.settings.button_label_2 -%}
+{%- assign button_link_2 = button_link_2 | default: section.settings.button_link_2 -%}
+{%- assign button_style = section.settings.button_style | default: section.settings.button_style_1 -%}
+{%- assign button_style_2 = section.settings.button_style_2 -%}
+
+{%- if button_label_1 != blank or button_label_2 != blank -%}
+    {%- assign show_buttons = show_buttons | default: true -%}
+{%- endif -%}
+
+{%- if layout == 'in-grid-heading' -%}
+    {%- if section.settings.title != blank or section.settings.description != blank or show_buttons == true -%}
+        {%- assign show_top_heading = true -%}
+    {%- endif -%}
+{%- else -%}
+    {%- if section.settings.title != blank or section.settings.description != blank -%}
+        {%- assign show_top_heading = true -%}
+    {%- endif -%}
+{%- endif -%}
+
+{%- assign items_size = items_size | default: section.blocks.size -%}
+{%- assign in_grid = in_grid | default: true -%}
+{%- assign in_grid_tag = in_grid_tag | default: 'li' -%}
+
+{%- if show_top_heading == true -%}
+    {%- capture section_heading_html -%}
+        <div class="heading-wrapper{% if inline_button == true %} heading-wrapper--inline-button{% endif %} animated-appearance{% if layout == 'heading-on-top-center' %} center{% endif %}{% if section.settings.layout_mobile_align != blank %} heading-wrapper--mobile-{{ section.settings.layout_mobile_align }}{% endif %}">
+            {%- if inline_button == true -%}
+                <div class="heading-wrapper">
+            {%- endif -%}
+            {%- if section.settings.title != blank -%}
+                <h2 class="heading-wrapper__heading heading-case {{ section.settings.title_size }}"><span class="title">{{ section.settings.title | escape }}</span></h2>
+            {%- endif -%}
+            {%- if section.settings.description != blank -%}
+                <div class="heading-wrapper__text heading-tag-case">
+                    {{ section.settings.description | replace: '> </', '></' }}
+                </div>
+            {%- endif -%}
+            {%- if inline_button == true -%}
+                </div>
+            {%- endif -%}
+            {%- if show_buttons == true -%}
+                {%- if layout == 'in-grid-heading' or inline_button == true -%}
+                    <div class="heading-wrapper__buttons section-buttons buttons-grid-small-up small-hide">
+                        <a{% if button_link_1 == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link_1 }}"{% endif %} class="{% render 'button-class' with button_style: button_style, button_class: 'button--small-full-width' %}">{{ button_label_1 | escape }}</a>
+                        <a{% if button_link_2 == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link_2 }}"{% endif %} class="{% render 'button-class' with button_style: button_style_2, button_class: 'button--small-full-width' %}">{{ button_label_2 | escape }}</a>
+                    </div>
+                {%- endif -%}
+            {%- endif -%}
+        </div>
+    {%- endcapture -%}
+
+    {%- if in_grid == true -%}
+        {%- if section.settings.swipe_on_mobile and items_size > 1 -%}
+            <div class="g-col-12 medium-hide large-up-hide">
+                {{ section_heading_html }}
+            </div>
+        {%- endif -%}
+        {% capture section_heading_column_html %}
+            <{{ in_grid_tag }} class="g-col-12 g-col-md-{% if layout == 'in-grid-heading' %}{% if columns_in_row == '3' %}4{% else %}6{% endif %}{% else %}12{% endif %}{% if section.settings.swipe_on_mobile and items_size > 1 %} small-hide{% endif %}">
+                {{ section_heading_html }}
+            </{{ in_grid_tag }}>
+        {% endcapture %}
+    {%- else -%}
+        {% capture section_heading_column_html %}
+            {{ section_heading_html }}
+        {% endcapture %}
+        {{ section_heading_column_html }}
+    {%- endif -%}
+{%- endif -%}
+{%- if show_buttons == true -%}
+    {%- capture heading_wrapper_mobile_buttons_html -%}
+        <div class="g-col-12 section-buttons buttons-grid-small-up{% if layout == 'heading-on-top-center' %} center{% elsif layout == 'in-grid-heading' %} large-up-hide{% endif %}{% if inline_button == true %} medium-hide large-up-hide{% endif %}">
+            <a{% if button_link_1 == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link_1 }}"{% endif %} class="{% render 'button-class' with button_style: button_style, button_class: 'button--small-full-width' %}">{{ button_label_1 | escape }}</a>
+            <a{% if button_link_2 == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link_2 }}"{% endif %} class="{% render 'button-class' with button_style: button_style_2, button_class: 'button--small-full-width' %}">{{ button_label_2 | escape }}</a>
+        </div>
+    {%- endcapture -%}
+{%- endif -%}

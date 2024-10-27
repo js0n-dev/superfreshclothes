@@ -1,0 +1,37 @@
+.rich-text {
+  margin: auto;
+}
+
+.rich-text--width-limit {
+  max-width: 67rem;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 993px) {
+  .rich-text--width-limit {
+    max-width: 50%;
+  }
+}
+
+.rich-text.rich-text--full-width {
+  max-width: initial;
+  width: 100%;
+}
+
+/* Blocks */
+.rich-text__blocks * {
+  overflow-wrap: break-word;
+}
+
+.rich-text__blocks > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.rich-text__blocks > *:not(style) + * {
+  margin-top: 2rem;
+}
+
+.rich-text__blocks > * + a {
+  margin-top: 3rem;
+}

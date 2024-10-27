@@ -1,0 +1,26 @@
+.list-payment {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  gap: 1rem;
+  padding-top: 1rem;
+  padding-left: 0;
+}
+
+@media screen and (min-width: 577px) {
+  .list-payment {
+    justify-content: flex-end;
+    padding-top: 0;
+  }
+}
+
+.list-payment__item {
+  align-items: center;
+  display: flex;
+}
+
+.list-payment__item .icon {
+  width: 3.8rem;
+  height: 2.4rem;
+}

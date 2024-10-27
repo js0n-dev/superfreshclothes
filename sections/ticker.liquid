@@ -1,0 +1,152 @@
+<link rel="stylesheet" href="{{ 'component-rte.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'section-ticker.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'section-ticker.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+{%- endstyle -%}
+
+<div id="TickerSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="ticker gradient{% if section.settings.full_width %} ticker--full-width{% endif %} section-{{ section.id }}-padding">
+      {% capture content_html %}
+        <div class="ticker__content">
+          {%- for block in section.blocks -%}
+            <div class="ticker__block" {{ block.shopify_attributes }}>
+              <span class="ticker__separator">✲</span>
+              {%- if block.settings.text != blank -%}
+                <span class="ticker__text rte {{ section.settings.content_size }}">
+                  {{ block.settings.text }}
+                </span>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {% endcapture %}
+      <noscript>
+        <marquee behavior="scroll" loop="infinity" truespeed="200" scrolldelay="50">
+          {{ content_html }}
+        </marquee>
+      </noscript>
+      <ticker-section class="hidden" data-speed="{{ section.settings.speed }}">
+        {{ content_html }}
+      </ticker-section>
+    </div>
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.ticker.name",
+  "tag": "section",
+  "class": "spaced-section spaced-section--full-width",
+  "disabled_on": {
+    "groups": ["custom.megamenu"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.ticker.settings.header__1.content"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "header",
+      "content": "t:sections.ticker.settings.header__2.content"
+    },
+    
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "t:sections.ticker.settings.speed.label",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content",
+      "name": "t:sections.ticker.blocks.content.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+          "label": "t:sections.ticker.blocks.content.settings.text.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ticker",
+      "blocks": [
+        {
+          "type": "content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

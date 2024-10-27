@@ -1,0 +1,40 @@
+{%- if section.settings.spacing_top > 0 -%}
+  .section-{{ section.id }}-padding {
+    --top-section-spacing: {{ section.settings.spacing_top | divided_by: 10.0 }}rem;
+    padding-top: var(--top-section-spacing);
+  }
+
+  {%- if section.settings.spacing_top > 40 -%}
+    @media screen and (max-width: 992px) {
+      .section-{{ section.id }}-padding {
+        {%- if section.settings.spacing_top > 80 -%}
+          --top-section-spacing: 8rem;
+        {%- elsif section.settings.spacing_top > 60 -%}
+          --top-section-spacing: 6rem;
+        {%- elsif section.settings.spacing_top > 40 -%}
+          --top-section-spacing: 4rem;
+        {%- endif -%}
+      }
+    }
+  {%- endif -%}
+{%- endif -%}
+{%- if section.settings.spacing_bottom > 0 -%}
+  .section-{{ section.id }}-padding {
+    --bottom-section-spacing: {{ section.settings.spacing_bottom | divided_by: 10.0 }}rem;
+    padding-bottom: var(--bottom-section-spacing);
+  }
+
+  {%- if section.settings.spacing_bottom > 40 -%}
+    @media screen and (max-width: 992px) {
+      .section-{{ section.id }}-padding {
+        {%- if section.settings.spacing_bottom > 80 -%}
+          --bottom-section-spacing: 8rem;
+        {%- elsif section.settings.spacing_bottom > 60 -%}
+          --bottom-section-spacing: 6rem;
+        {%- elsif section.settings.spacing_bottom > 40 -%}
+          --bottom-section-spacing: 4rem;
+        {%- endif -%}
+      }
+    }
+  {%- endif -%}
+{%- endif -%}

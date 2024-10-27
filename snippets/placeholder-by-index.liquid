@@ -1,0 +1,12 @@
+{%- assign index = index | default: 1 -%}
+{%- assign namespace = namespace | default: 'collection-' -%}
+{%- if index > 6 -%}
+    {%- assign factor = index | divided_by: 6 -%}
+    {%- assign body = 6 | times: factor -%}
+    {%- assign index = index | minus: body -%}
+    {%- if index == 0 -%}
+        {%- assign index = 6 -%}
+    {%- endif -%}
+{%- endif -%}
+{%- assign placeholder_name = namespace | append: index -%}
+{{- placeholder_name | placeholder_svg_tag: 'placeholder-svg' -}}

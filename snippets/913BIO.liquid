@@ -1,0 +1,81 @@
+<div class="page-width">
+  <div style="text-align: center;">
+    <img src="https://cdn.shopify.com/s/files/1/0262/8631/files/logo_black.png?v=1726243934" style=" width: 110px;padding-bottom:10px;">
+    <h3 style="font-size: 1.8em;font-weight: 700;padding: 0;margin: 0;font-family: 'Oswald';">SIGN UP FOR DROPS</h3>
+    <div id="ps__subscribe-form" style="max-width: 450px; margin: auto; padding: 10px;">
+      <form method="post" action="https://api.postscript.io/subscribe/form" target="dummyframe" onsubmit="document.getElementById('ps__sent-message').style.display = 'block'; document.getElementById('ps__subscribe-form').style.display = 'none';">
+        <input value="15583" type="hidden" name="shop_id" id="ps__shop_id">
+        <input value="429428" type="hidden" name="keyword_id" id="ps__keyword_id">
+         <div style="max-width: 100%;font-size: 12px;margin-bottom: 15px;margin-top: 0px;text-align: justify;line-height: 1.5;font-weight: 400;">By providing your phone number, you agree to receive recurring automated marketing texts. Consent is not required for purchases. Msg & data rates may apply. Reply HELP for help, STOP to cancel. You also agree to the <a href="https://superfreshclothes.myshopify.com/policies/terms-of-service">Terms of Service</a> and <a href="https://superfreshclothes.myshopify.com/policies/privacy-policy">Privacy Policy</a>. </div>
+       
+        <div style="margin-bottom: 10px; text-align: center;">
+          <input style="width: 100%; padding: 0.45em; font-size: 1.1em;" placeholder="Phone Number" type="phone" name="phone" id="ps__phone-subscribe" autofocus="">
+        </div>
+        <div>
+          <!-- <input style="width: 100%;padding: 0.75em;font-size: 1.5em;border-radius: 0;height: 60px;" class="btn" value="Subscribe" type="submit"> -->
+          <button style="width: 100%; padding: 0.75em; font-size: 1.5em; border-radius: 0; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;" class="btn" type="submit">
+            <span style="font-size: 1.2em;color: white;">ADD ME</span>
+            <span style="font-size: 0.55em;color: white;">to the private drop list</span>
+        </button>
+
+
+        </div>
+      </form>
+    </div>
+    <div id="ps__sent-message" style="max-width: 400px; margin: auto; padding: 20px; display: none;">
+      <h4>Thanks for subscribing! We'll send you a message shortly.</h4>
+    </div>
+  </div>
+</div>
+<iframe id="ps__dummyframe" name="dummyframe" border="0" height="0" width="0"></iframe>
+
+<style>
+  .password-header__heading-logo, .header__heading-logo{
+        visibility: hidden !important;
+    height:10px;
+  }
+  .password-header{
+    min-height: .5rem;
+  }
+  *:focus-visible{
+     outline: none !important;
+    outline-offset: .1rem !important;
+    box-shadow:  0 0 0 .3rem #ffffff66, 0 0 .5rem .4rem rgb(0 0 0 / 9%); !important;
+  }
+button, .btn{
+  background: #000000;
+  color: ##ffffff;
+  border: 1px solid #000000;
+  padding: 0 20px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 42px;
+  height: 40px;
+  line-height: 1.2;
+  vertical-align: top;
+  font-family: Oswald;
+  font-weight: normal;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  transition: all 0.2s linear;
+  -webkit-appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
+  border-radius: 100px; 
+}
+
+</style>

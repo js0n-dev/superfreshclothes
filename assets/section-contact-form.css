@@ -1,0 +1,47 @@
+.contact .grid-bs {
+  row-gap: 4rem;
+}
+
+.contact--width-limit {
+  max-width: 67rem;
+  margin: 0 auto;
+}
+
+.contact img {
+  max-width: 100%;
+}
+
+.contact .title {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.contact__subheading {
+  margin-top: 2rem;
+}
+
+.contact .form__message {
+  align-items: flex-start;
+}
+
+.contact .icon-success {
+  margin-top: 0.2rem;
+}
+
+.contact .field {
+  margin-bottom: 1.5rem;
+}
+
+@media screen and (min-width: 577px) {
+  .contact .field {
+    margin-bottom: 2rem;
+  }
+}
+
+.contact__button {
+  margin-top: 3rem;
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
+}

@@ -1,0 +1,285 @@
+{%- assign blocks_badges = section.blocks | where: 'type', 'badges' -%}
+
+{%- for block in blocks_badges -%}
+  {%- comment %}<locksmith:120c>{% endcomment -%}
+    {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: block, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+  {%- comment %}</locksmith:120c>{% endcomment -%}
+  {%- style -%}
+    .badge[data-block-id="{{ block.id }}"] {
+      {%- if block.settings.background_color.alpha > 0 -%}
+        --color-badge-background: {{ block.settings.background_color.red }}, {{ block.settings.background_color.green }}, {{ block.settings.background_color.blue }};
+      {%- endif -%}
+      {%- if block.settings.text_color.alpha > 0 -%}
+        --color-badge-foreground: {{ block.settings.text_color.red }}, {{ block.settings.text_color.green }}, {{ block.settings.text_color.blue }};
+      {%- endif -%}
+    }
+  {%- endstyle -%}
+  {%- for i in (1..15) -%}
+    {% capture prop_for_item_name %}for_item{% if i > 1 %}_{{ i }}{% endif %}{% endcapture %}
+    {%- if block.settings[prop_for_item_name] == blank -%}
+        {%- continue -%}
+    {%- endif -%}
+    {% capture badges_key_value %}
+        {{ badges_key_value }}|||{{ block.settings[prop_for_item_name] | handleize }}|||
+        <span class="badge badge--small color-accent" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+    {% endcapture %}
+  {%- endfor -%}
+{%- endfor -%}
+
+{{ 'section-mega-menu.css' | asset_url | stylesheet_tag }}
+
+<mega-menu id="MegaMenu-{{ section.id }}" class="mega-menu" data-link-handle="{{ section.settings.link_title | default: link_title | handleize }}" data-index="{{ section.index }}">
+  <div class="mega-menu__spacer"></div>
+  <button
+    type="button"
+    class="mega-menu__close modal__close-button link link--text focus-inset"
+    aria-label="{{ 'accessibility.close' | t }}">
+    <svg
+      class="icon icon-close"
+      aria-hidden="true"
+      focusable="false"
+      role="presentation">
+      <use href="#icon-close"></svg>
+  </button>
+  {%- assign columns_size = 0 -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'badges' -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- assign columns_size = columns_size | plus: 1 -%}
+  {%- endfor -%}
+  <div class="mega-menu__content page-width">
+    {%- assign content_blocks_size = 0 -%}
+    {%- for block in section.blocks -%}
+			{%- case block.type -%}
+				{%- when 'menu' -%}
+        {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+          {%- if block.settings.image != blank -%}
+            {%- style -%}
+              {%- assign image_aspect_ratio = block.settings.image.aspect_ratio | default: 0.66 -%}
+              {% capture image_aspect_ratio %}{{ 1 | divided_by: image_aspect_ratio | times: 100 }}%{% endcapture %}
+              #MegaMenu-{{ section.id }} .mega-menu__menu[data-block-id="{{ block.id }}"] .media {
+                padding-bottom: {{ image_aspect_ratio }};
+              }
+            {%- endstyle -%}
+          {%- endif -%}
+					{%- if block.settings.menu != blank -%}
+						<div class="mega-menu__menu" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+							{%- if block.settings.image != blank -%}
+								<div class="mega-menu__menu-image mega-menu__menu-image--{{ block.settings.image_position | replace: '_', '-' }} hover-animation-global">
+									{%- if block.settings.menu_heading_link != blank -%}
+										<a href="{{ block.settings.menu_heading_link }}">
+									{%- endif -%}
+										<div class="media">
+											<img 
+                        srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                          {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                          {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | img_url: '1100x' }} 1100w,{%- endif -%}
+                          {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | img_url: '1500x' }} 1500w,{%- endif -%}
+                          {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | img_url: '1780x' }} 1780w,{%- endif -%}
+                          {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | img_url: '2000x' }} 2000w,{%- endif -%}
+                          {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | img_url: '3000x' }} 3000w,{%- endif -%}
+                          {%- if block.settings.image.width >= 3840 -%}{{ block.settings.image | img_url: '3840x' }} 3840w,{%- endif -%}
+                          {{ block.settings.image | img_url: 'master' }} {{ block.settings.image.width }}w"
+                        sizes="calc((100vw / {{ columns_size }}))"
+                        src="{{ block.settings.image | img_url: '1500x' }}"
+												loading="lazy"
+												alt="{{ block.settings.image.alt | escape }}"
+												width="{{ block.settings.image.width }}"
+												height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio }}"
+                        style="object-position: {{ block.settings.image.presentation.focal_point }};"
+											>
+										</div>
+									{%- if block.settings.menu_heading_link != blank -%}
+										</a>
+									{%- endif -%}
+								</div>
+							{%- endif -%}
+              {%- if block.settings.menu_heading_link != blank -%}
+								<a href="{{ block.settings.menu_heading_link }}" class="mega-menu__menu-title h5 link-underlined">
+                  <span>{{ block.settings.menu.title | escape }}{% render 'menu-badge' with badges_key_value: badges_key_value link: block.settings.menu %}</span>
+                </a>
+							{%- else -%}
+								<span class="mega-menu__menu-title h5">
+                  <span>{{ block.settings.menu.title | escape }}{% render 'menu-badge' with badges_key_value: badges_key_value link: block.settings.menu %}</span>
+                </span>
+							{%- endif -%}
+							<ul class="list-menu" role="list">
+								{%- for link in block.settings.menu.links -%}
+									{%- comment %}<locksmith:4c0c>{% endcomment -%}
+									  {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: link, subject_parent: block.settings.menu, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+									{%- comment %}</locksmith:4c0c>{% endcomment -%}
+									<li>
+										<a href="{{ link.url }}" class="mega-menu__menu-item link link--text focus-inset"{% if link.current %} aria-current="page"{% endif %}>
+											<span {%- if link.current %} class="header__active-icons-menu-item"{% endif %}>{{ link.title | escape }}{% render 'menu-badge' with badges_key_value: badges_key_value link: block.settings.menu childlink: link %}</span>
+										</a>
+									</li>
+								{%- endfor -%}
+							</ul>
+						</div>
+					{%- endif -%}
+				{%- when 'image_with_button' -%}
+          {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+          {%- style -%}
+            {%- assign image_aspect_ratio = block.settings.image.aspect_ratio | default: 0.66 -%}
+            {% capture image_aspect_ratio %}{{ 1 | divided_by: image_aspect_ratio | times: 100 }}%{% endcapture %}
+            #MegaMenu-{{ section.id }} .mega-menu__image-with-button[data-block-id="{{ block.id }}"] .media {
+              padding-bottom: {{ image_aspect_ratio }};
+            }
+          {%- endstyle -%}
+					<div class="mega-menu__image-with-button" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+						<div class="image-with-button hover-animation-global">
+              <div class="image-with-button__media">
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}">
+                {%- endif -%}
+                <div class="media{% if block.settings.image == blank %} placeholder{% endif %}">
+                  {%- if block.settings.image != blank -%}
+                    <img
+                      srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                        {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                        {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | img_url: '1100x' }} 1100w,{%- endif -%}
+                        {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | img_url: '1500x' }} 1500w,{%- endif -%}
+                        {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | img_url: '1780x' }} 1780w,{%- endif -%}
+                        {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | img_url: '2000x' }} 2000w,{%- endif -%}
+                        {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | img_url: '3000x' }} 3000w,{%- endif -%}
+                        {%- if block.settings.image.width >= 3840 -%}{{ block.settings.image | img_url: '3840x' }} 3840w,{%- endif -%}
+                        {{ block.settings.image | img_url: 'master' }} {{ block.settings.image.width }}w"
+                      sizes="calc((100vw / {{ columns_size }}))"
+                      src="{{ block.settings.image | img_url: '1500x' }}"
+                      loading="lazy"
+                      alt="{{ block.settings.image.alt | escape }}"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio }}"
+                      style="object-position: {{ block.settings.image.presentation.focal_point }};"
+                    >
+                  {%- else -%}
+                    <div class="placeholder media">
+                      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {%- endif -%}
+                </div>
+                {%- if block.settings.link != blank -%}
+                  </a>
+                {%- endif -%}
+              </div>
+              <div class="image-with-button__content">
+                {%- if block.settings.button_label != blank -%}
+                  {%- if block.settings.button_color.alpha > 0 -%}
+                      {%- style -%}
+                          #MegaMenu-{{ section.id }} .mega-menu__image-with-button[data-block-id="{{ block.id }}"] .image-with-button__button {
+                              --color-button: {{ block.settings.button_color.red }}, {{ block.settings.button_color.green }}, {{ block.settings.button_color.blue }};
+                              {%- if 'primary' contains block.settings.button_style -%}
+                                  --color-button-text: {% render 'color-contrast' with color: block.settings.button_color %};
+                              {%- endif -%}
+                          }
+                      {%- endstyle -%}
+                  {%- endif -%}
+                  <a{% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image-with-button__button button button--product-cart">{{ block.settings.button_label | escape }}</a>
+                {%- endif -%}
+              </div>
+            </div>
+					</div>
+        {%- when 'featured_promotion' -%}
+          {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+          {%- style -%}
+            {%- assign image_aspect_ratio = block.settings.image.aspect_ratio | default: 0.66 -%}
+            {% capture image_aspect_ratio %}{{ 1 | divided_by: image_aspect_ratio | times: 100 }}%{% endcapture %}
+            #MegaMenu-{{ section.id }} .mega-menu__featured-promotion[data-block-id="{{ block.id }}"] .media {
+              padding-bottom: {{ image_aspect_ratio }};
+            }
+          {%- endstyle -%}
+					<div class="mega-menu__featured-promotion" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+						<div class="mega-menu-featured-promotion mega-menu-featured-promotion--{{ block.settings.align }} hover-animation-global link-underlined-trigger">
+              <div class="mega-menu-featured-promotion__media">
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}">
+                {%- endif -%}
+                <div class="media{% if block.settings.image == blank %} placeholder{% endif %}">
+                  {%- if block.settings.image != blank -%}
+                    <img
+                      srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                        {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                        {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | img_url: '1100x' }} 1100w,{%- endif -%}
+                        {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | img_url: '1500x' }} 1500w,{%- endif -%}
+                        {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | img_url: '1780x' }} 1780w,{%- endif -%}
+                        {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | img_url: '2000x' }} 2000w,{%- endif -%}
+                        {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | img_url: '3000x' }} 3000w,{%- endif -%}
+                        {%- if block.settings.image.width >= 3840 -%}{{ block.settings.image | img_url: '3840x' }} 3840w,{%- endif -%}
+                        {{ block.settings.image | img_url: 'master' }} {{ block.settings.image.width }}w"
+                      sizes="calc((100vw / {{ columns_size }}))"
+                      src="{{ block.settings.image | img_url: '1500x' }}"
+                      loading="lazy"
+                      alt="{{ block.settings.image.alt | escape }}"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio }}"
+                      style="object-position: {{ block.settings.image.presentation.focal_point }};"
+                    >
+                  {%- else -%}
+                    <div class="placeholder media">
+                      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {%- endif -%}
+                </div>
+                {%- if block.settings.link != blank -%}
+                  </a>
+                {%- endif -%}
+              </div>
+              <div class="mega-menu-featured-promotion__content">
+                {%- if block.settings.heading != blank -%}
+                  {%- if block.settings.heading_color.alpha > 0 -%}
+                    {%- style -%}
+                      #MegaMenu-{{ section.id }} .mega-menu__featured-promotion[data-block-id="{{ block.id }}"] .mega-menu-featured-promotion__heading {
+                        --color-foreground: {{ block.settings.heading_color.red }}, {{ block.settings.heading_color.green }}, {{ block.settings.heading_color.blue }};
+                      }
+                    {%- endstyle -%}
+                  {%- endif -%}
+                  {%- if block.settings.link != blank -%}
+                    <a href="{{ block.settings.link | default: '#' }}" class="mega-menu-featured-promotion__heading {{ block.settings.heading_size }} link-underlined">{{ block.settings.heading }}</a>
+                  {%- else -%}
+                    <span class="mega-menu-featured-promotion__heading {{ block.settings.heading_size }}">{{ block.settings.heading }}</span>
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if block.settings.button_label != blank -%}
+                  {%- if block.settings.button_color.alpha > 0 -%}
+                      {%- style -%}
+                          #MegaMenu-{{ section.id }} .mega-menu__featured-promotion[data-block-id="{{ block.id }}"] .mega-menu-featured-promotion__button {
+                              --color-button: {{ block.settings.button_color.red }}, {{ block.settings.button_color.green }}, {{ block.settings.button_color.blue }};
+                              {%- if 'primary' contains block.settings.button_style -%}
+                                  --color-button-text: {% render 'color-contrast' with color: block.settings.button_color %};
+                              {%- endif -%}
+                          }
+                      {%- endstyle -%}
+                  {%- endif -%}
+                  {%- assign button_link = block.settings.button_link | default: block.settings.link -%}
+                  <a{% if button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link }}"{% endif %} class="mega-menu-featured-promotion__button {% render 'button-class' with button_style: block.settings.button_style %}">{{ block.settings.button_label | escape }}</a>
+                {%- endif -%}
+              </div>
+            </div>
+					</div>
+				{%- when 'empty_column' -%}
+          {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+					<div class="mega-menu__empty-column" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}></div>
+        {%- when 'custom_html' -%}
+          {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+					<div class="mega-menu__custom-html" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+            {{ block.settings.html }}
+          </div>
+			{%- endcase -%}
+    {%- endfor -%}
+  </div>
+</mega-menu>
+
+{%- style -%}
+  #MegaMenu-{{ section.id }} .mega-menu__content {
+    grid-template-columns: repeat({{ content_blocks_size }}, 1fr);
+  }
+
+  {%- comment -%}
+  @media screen and (min-width: 993px) {
+    body:not(.mega-menu-active) #MegaMenu-mega-menu-1 {
+      display: block !important;
+    }
+  }
+  {%- endcomment -%}
+{%- endstyle -%}

@@ -1,0 +1,106 @@
+{%- style -%}
+  {% render 'section-padding', section: section %}
+{%- endstyle -%}
+  
+<div id="AppsSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <div class="apps-section section-{{ section.id }}-padding {% if section.settings.include_margins %}page-width{% endif %}{% if section.settings.custom_class != blank %} {{ section.settings.custom_class }}{% endif %}">
+    {%- for block in section.blocks -%}
+      {% render block %}
+    {%- endfor -%}
+  </div>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+  {
+    "name": "t:sections.apps.name",
+    "tag": "section",
+    "class": "spaced-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "custom_class",
+        "default": "theme-form",
+        "label": "t:sections.apps.settings.custom_class.label"
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+      {
+        "type": "checkbox",
+        "id": "include_margins",
+        "default": true,
+        "label": "t:sections.apps.settings.include_margins.label"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.apps.presets.name"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,41 @@
+
+
+
+<script src="{{ 'navigation.js' | asset_url }}" defer="defer"></script>
+
+{%- if request.design_mode -%}
+  <script>
+    (function() {
+      const events = [
+        'shopify:section:select',
+        'shopify:section:deselect'
+      ];
+
+      events.forEach(function(event) {
+        document.addEventListener(event, function(e) {
+          const megaMenu = e.target.getElementsByTagName('mega-menu')[0];
+
+          if (!megaMenu) return;
+
+          document.body.classList[e.type === events[0] ? 'add' : 'remove']('dm-mega-menu-visible');
+          megaMenu.classList[e.type === events[0] ? 'add' : 'remove']('dm-visible-forced');
+        });
+      });
+    })();
+  </script>
+
+  <style>
+    @media screen and (min-width: 993px) {
+      body:not(.mega-menu-visible):not(.dropdown-menu-visible) .dm-visible-forced {
+        display: block !important;
+        height: auto !important;
+        background-color: rgb(var(--clr-theme-background));
+        opacity: 1;
+      }
+
+      body:not(.mega-menu-visible):not(.dropdown-menu-visible).dm-mega-menu-visible .animated-logo__absolute-picture {
+        z-index: 2;
+      }
+    }
+  </style>
+{%- endif -%}

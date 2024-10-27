@@ -1,0 +1,56 @@
+<script>
+  class ThemeBase {
+    constructor() {
+      this.checkWindow();
+      this.addMutationObserver();
+      window.addEventListener('load', this.onLoad.bind(this));
+      window.addEventListener('resize', this.onResize.bind(this));
+    }
+
+    triggerMutationObserverEvent() {
+      if(this.pageLoaded) {
+        window.dispatchEvent(new Event('MutationObserverLoaded'));
+      } else {
+        window.dispatchEvent(new Event('MutationObserver'));
+      }
+    }
+
+    addMutationObserver() {
+      this.observer = new MutationObserver(event => {
+        this.triggerMutationObserverEvent();
+      });
+
+      this.observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    removeMutationObserver() {
+      this.observer.disconnect();
+    }
+
+    checkWindow() {
+      this.windowWidth = window.innerWidth;
+      this.windowHeight = window.innerHeight;
+      this.isDesktop = this.windowWidth >= parseInt('993px');
+    }
+
+    onLoad() {
+      this.pageLoaded = true;
+      this.checkWindow();
+      this.triggerMutationObserverEvent();
+    }
+
+    onResize() {
+      this.checkWindow();
+    }
+
+    viewportFunction(viewportIsDesktop, callback) {
+      if(viewportIsDesktop !== this.isDesktop) {
+        return;
+      }
+
+      callback();
+    }
+  }
+
+  const themeBase = new ThemeBase;
+</script>

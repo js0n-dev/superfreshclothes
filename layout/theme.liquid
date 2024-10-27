@@ -1,0 +1,447 @@
+{%- comment %}<locksmith:f782>{% endcomment -%}
+  {%- include 'locksmith' -%}
+{%- comment %}</locksmith:f782>{% endcomment -%}
+
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+ {{ locksmith_initializations }}
+ {%- render 'ecom_header' -%}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
+    {%- endif -%}
+
+    {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      {%- comment %}<locksmith:37ed>{% endcomment -%}
+        {%- capture var %}{% render 'locksmith-variables', variable: 'transparent', hiding_scope: 'resource' %}{% endcapture %}{% if var == 'true' %}<meta name="description" content="{{ page_description | escape }}">{% endif -%}
+        {%- comment %}original: <meta name="description" content="{{ page_description | escape }}">{%- endcomment %}
+      {%- comment %}</locksmith:37ed>{% endcomment -%}
+    {% endif %}
+
+    {% render 'meta-tags' %}
+    {% render 'version' %}
+
+    <script>
+      window.log = console.log;
+    </script>
+    <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    {{ content_for_header }}
+
+    {%- liquid
+      assign body_font_400 = settings.type_body_font | font_modify: 'weight', '400'
+      assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+      assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+    %}
+
+    {% style %}
+      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ body_font_400 | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+      {{ settings.type_header_font | font_face: font_display: 'swap' }}
+      {{ settings.type_button_font | font_face: font_display: 'swap' }}
+
+      {% render 'head-css' %}
+
+      {% if settings.option_colors != blank %}
+        {%- assign option_colors_split = settings.option_colors | newline_to_br | split: '<br />' -%}
+      {%- endif -%}
+      {% for color_n_code in option_colors_split -%}
+        {% assign color_n_code_split = color_n_code | split: '|' %}
+        {% assign color_name = color_n_code_split[0] | strip_newlines | downcase | replace: ' ', '-' | replace: '->', '-' %}
+
+        .standard-color-{{ color_name }},
+        .option-{{ color_name }} {
+          --background: {% if color_n_code_split[1] contains '/' %}url({{ color_n_code_split[1] }}){% else %}{{ color_n_code_split[1] }}{% endif %} !important;
+          --border: none !important;
+        }
+
+        {% if color_n_code_split[1] contains '/' %}
+          .option-{{ color_name }} {
+            background-color: transparent !important;
+            background-image: url({{ color_n_code_split[1] }}) !important;
+          }
+        {%- endif -%}
+      {% endfor %}
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+
+      html {
+        box-sizing: border-box;
+        font-size: calc(var(--font-body-scale) * 62.5%);
+        height: 100%;
+      }
+
+      @media screen and (max-width: 992px) {
+        html * {
+          max-height:1000000px;
+        }
+      }
+
+      body {
+        /* display: grid;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-columns: 100%; */
+        min-height: 100%;
+        margin: 0;
+        font-size: calc(var(--font-body-scale) * 1.6rem);
+        letter-spacing: 0;
+        line-height: calc(1 + 0.3125 / var(--font-body-scale));
+        font-family: var(--font-body-family);
+        font-style: var(--font-body-style);
+        font-weight: var(--font-body-weight);
+        overflow-x: hidden;
+
+      }
+
+      main {
+        z-index: 1;
+      }
+
+      .theme-wv {
+        display: block !important;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        height: calc(100vh - 20px);
+        z-index: -999;
+        pointer-events: none;
+        color: rgba(255, 255, 255, 0);
+      }
+
+      .theme-wv:after {
+        content: '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ';
+      }
+
+      {%- if settings.enable_appearance_effect -%}
+        {%- unless request.design_mode -%}
+          .animated-appearance {
+            transition-property: opacity, transform;
+            transition-duration: 1s;
+            transition-timing-function: cubic-bezier(.175, .885, .32, 1.275);
+          }
+
+          .animated-appearance--fast {
+            transition-duration: 0.5s;
+          }
+
+          .js .animated-appearance:not(.animated-appearance--visible) {
+            opacity: 0.01;
+            transform: translate3d(0, 100px, 0);
+          }
+        {%- endunless -%}
+      {%- endif -%}
+
+      {%- if settings.card_image_animation != 'none' -%}
+        @media screen and (min-width: 993px) {
+          .card .media.media--hover-effect > img:only-child,
+          .card-wrapper .media.media--hover-effect > img:only-child,
+          .card-wrapper .media.media--hover-effect > img + img,
+          .card--search img {
+            /* transition: transform var(--duration-long) ease-in-out; */
+            transition: var(--zoom-transition);
+            {%- if settings.card_image_animation == 'zoom-out' -%}
+              transform: scale(var(--hover-animation-zoom-end));
+            {%- endif -%}
+          }
+
+          .card:hover .media.media--hover-effect > img:first-child:only-child,
+          .card-wrapper:hover .media.media--hover-effect > img:first-child:only-child,
+          .card-wrapper:hover .media.media--hover-effect > img + img,
+          .card-wrapper:hover .card--search img {
+            {%- if settings.card_image_animation == 'zoom-in' -%}
+              transform: scale(var(--hover-animation-zoom-end));
+            {%- elsif settings.card_image_animation == 'zoom-out' -%}
+              transform: scale(var(--hover-animation-zoom-start));
+            {%- endif -%}
+          }
+        }
+      {%- endif -%}
+
+      .card-wrapper .media.media--hover-effect > img:first-child:not(:only-child),
+      .card-wrapper .media.media--hover-effect > img:first-child:not(:only-child) + img {
+        transition-property: transform, opacity;
+      }
+      
+      .card-wrapper:hover .media.media--hover-effect > img:first-child:not(:only-child) {
+        opacity: 0;
+      }
+
+      .card-wrapper:hover .media.media--hover-effect > img + img {
+        opacity: 1;
+      }
+
+      predictive-search:not([loading]) .predictive-search__heading .spinner,
+      predictive-search:not([loading]) .predictive-search__loading-state,
+      predictive-search:not([loading]) .predictive-search-status__loading {
+        display: none;
+      }
+    {% endstyle %}
+
+        <!-- customer style -->
+    {% if customer %}
+      {% if customer.tags contains "Members" or customer.tags contains "members" or customer.tags contains "newmob"  or customer.tags contains "fitmob" %}
+        <style>
+          .header__first-line-wrapper{
+                background: #e3c45a !important;
+          }
+        </style>
+      {% endif %}
+    {% endif %}
+
+     {% if page.title == "Superfresh Landing Page"  %}
+        <style>
+           #MainContent{
+               width: 1600px;
+               margin: auto;
+           }
+        @media screen and (max-width: 767px){
+          #MainContent {
+              width: 100%;
+          }
+     }
+        </style>  
+        
+      {% endif %}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    {%- unless settings.type_body_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+    {%- unless settings.type_header_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+
+    {%- if settings.search_enabled and settings.predictive_search_enabled -%}
+      <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+
+    <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+  </head>
+  <body class="gradient hover-animation-body--{{ settings.images_animation }}{% if settings.enable_page_width %} layout-boxed{% endif %}">
+
+  <!-- Bold: Memberships -->
+  {% if customer %}
+  <div class="bold_customer_id" hidden>{{ customer.id }}</div>
+  {% endif %}
+  <!-- end Bold code -->
+
+    
+    {% render 'js-body-start' %}
+    <div class="theme-wv"></div>
+
+    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+      {{ "accessibility.skip_to_text" | t }}
+    </a>
+
+    {%- if settings.show_announcement_bar -%}
+      {% section 'announcement-bar' %}
+    {%- endif -%}
+
+    <div class="header-sections-wrapper">
+      {% sections 'header-group' %}
+
+      <div class="mega-menus">
+        <div class="mega-menus__overlay"></div>
+        <div class="mega-menus__background gradient" id="megaMenuBackground">
+          <div class="mega-menus__background-shadow"></div>
+        </div>
+        <div class="mega-menus__menus">
+          {% sections 'mega-menu-group' %}
+        </div>
+      </div>
+
+      {% render 'mega-menus' %}
+
+      {%- if settings.sticky_header_type contains 'logo' and template.name == 'index' and settings.enable_logo -%}
+        {% render 'animated-logo' %}
+      {%- endif -%}
+    </div>
+    
+    {%- if settings.enable_mini_cart -%}
+      {% section 'mini-cart' %}
+    {%- endif -%}
+
+    <main id="MainContent" class="content-for-layout gradient focus-none" role="main" tabindex="-1">
+      {%- if settings.show_breadcrumbs -%}
+  <div class="page-width" {% if template == 'collection' %}style="display:none;"{% endif %}>
+    {% render 'breadcrumbs' %}
+  </div>
+{%- endif -%}
+
+
+      {{ content_for_layout }}
+
+      {%- if settings.footer_fixed_effect contains 'enable' -%}
+        <div class="page-width">
+          <div class="dividing-line"></div>
+        </div>
+      {%- endif -%}
+    </main>
+
+    {%- if settings.enable_appearance_effect -%}
+      {%- unless request.design_mode -%}
+        <script src="{{ 'appearance-effect.js' | asset_url }}" defer="defer"></script>
+      {%- endunless -%}
+    {%- endif -%}
+
+    {% sections 'footer-group' %}
+    {% render 'popups' %}
+    <ul hidden>
+      <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
+    </ul>
+    
+    <script>
+      window.routes = {
+        cart_url: '{{ routes.cart_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}'
+      };
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        emptyFieldError: `{{ 'sections.cart.empty_field_error' | t }}`,
+        maxLengthError: `{{ 'sections.cart.max_length_error' | t }}`,
+        freeShippingHTML: {{ 'general.cart.free_shipping_html' | t | json }},
+        freeShippingCompleteHTML: {{ 'general.cart.free_shipping_complete_html' | t | json }}
+      }
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+        unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
+        stockCountdown: {
+            title: {{ 'products.product.stock_countdown_html' | t | json }}
+        },
+        countdown: {
+            years: {{ 'products.product.countdown.years' | t | json }},
+            months: {{ 'products.product.countdown.months' | t | json }},
+            weeks: {{ 'products.product.countdown.weeks' | t | json }},
+            days: {{ 'products.product.countdown.days' | t | json }},
+            hours: {{ 'products.product.countdown.hours' | t | json }},
+            minutes: {{ 'products.product.countdown.minutes' | t | json }},
+            seconds: {{ 'products.product.countdown.seconds' | t | json }}
+        },
+        deliveryCountdown: {
+            hours: {{ 'products.product.delivery_countdown.hours' | t | json }},
+            minutes: {{ 'products.product.delivery_countdown.minutes' | t | json }},
+            daysOfWeek: {
+                sunday: {{ 'products.product.delivery_countdown.days_of_week.sunday' | t | json }},
+                monday: {{ 'products.product.delivery_countdown.days_of_week.monday' | t | json }},
+                tuesday: {{ 'products.product.delivery_countdown.days_of_week.tuesday' | t | json }},
+                wednesday: {{ 'products.product.delivery_countdown.days_of_week.wednesday' | t | json }},
+                thursday: {{ 'products.product.delivery_countdown.days_of_week.thursday' | t | json }},
+                friday: {{ 'products.product.delivery_countdown.days_of_week.friday' | t | json }},
+                saturday: {{ 'products.product.delivery_countdown.days_of_week.saturday' | t | json }}
+            }
+        }
+      }
+
+      window.accessibilityStrings = {
+        imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,
+        pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
+        playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
+        recipientFormExpanded: `{{ 'recipient.form.expanded' | t }}`,
+        recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
+      }
+
+      window.shopUrl = '{{ shop.url }}';
+      window.shopDomain = '{{ shop.domain }}';
+      window.shopPermanentDomain = '{{ shop.permanent_domain }}';
+      window.shopTheme = 'Unicorn';
+      window.themeRole = '{{ theme.role }}';
+      window.themeSettingsDataSchema = {
+        'Layout -> Header -> Type on large screens': '{{ settings.header_layout }}',
+        'Layout -> Sticky header -> Type': '{{ settings.sticky_header_type }}',
+        'Cart -> Enable drawer': '{{ settings.enable_mini_cart }}'
+      };
+      window.enableMiniCart = {{ settings.enable_mini_cart | json }};
+      window.addToCartAction = {{ settings.add_to_cart_action | json }};
+      window.cartCountdownResetInterval = {{ settings.cart_countdown_reset | json }};
+
+      Shopify.money_format = '{{ shop.money_format }}';
+    </script>
+
+    {%- if settings.enable_free_shipping or settings.enable_cart_countdown -%}
+      {{ 'component-free-shipping.css' | asset_url | stylesheet_tag }}
+      
+      <script src="{{ 'free-shipping.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    {%- if settings.search_enabled -%}
+      <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
+      
+      {%- if settings.predictive_search_enabled -%}
+        <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if request.design_mode -%}
+      <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+
+      <script>
+        (function() {
+          const events = [
+            'shopify:section:select',
+            'shopify:section:deselect'
+          ];
+
+          events.forEach(function(event) {
+            document.addEventListener(event, function(e) {
+              e.target.classList[e.type === events[0] ? 'add' : 'remove']('design-mode-section-selected');
+            });
+          });
+        })();
+      </script>
+    {%- endif -%}
+  {%- render "ecom_footer"-%}
+
+    <script>
+  window.monster_protection_event_listner = "click";
+  window.monster_protection_selectors = ['.cart__ctas', '#cart-notification-form', '.mini-cart__ctas']
+  window.monster_protection_checkout_selectors = ['[name="checkout"]']
+  window.monster_protection_dynamic_selectors = ["main-cart-footer", "cart-notification", "main-mini-cart-items"]
+</script>
+    <style>
+  .offerSide___QIf23 > div:last-child {
+    display: none !important;
+  }
+.titleContainer___ojBwJ {
+    gap: 10px !important;
+}
+</style>
+  
+  </body>
+</html>

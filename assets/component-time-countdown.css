@@ -1,0 +1,104 @@
+.time-countdown--style-card {
+    border-radius: var(--buttons-border-radius);
+    gap: 1rem;
+  }
+  
+  .time-countdown--style-card,
+  .time-countdown--style-card .time-countdown__timer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (max-width: 410px) {
+    .time-countdown--style-card .time-countdown__timer {
+      font-size: 1.2rem;
+      line-height: calc(1 + 0.33333333 / var(--font-body-scale));
+    }
+  }
+
+  @media screen and (max-width: 370px) {
+    .time-countdown--style-card .time-countdown__timer {
+      font-size: 1.1rem;
+    }
+  }
+  
+  .time-countdown--style-card .time-countdown__postfix {
+    display: none;
+  }
+  
+  .time-countdown--style-product .time-countdown__postfix {
+    display: block;
+  }
+  
+  .time-countdown--style-card .time-countdown__break:last-child {
+    display: none;
+  }
+
+
+.time-countdown--style-product {
+    --time-countdown-background-value: transparent;
+    --time-countdown-border-color-value: rgba(var(--clr-line), var(--clr-line-alpha));
+    --time-countdown-text: var(--clr-theme-base);
+  }
+  
+  .time-countdown--style-product.time-countdown,
+  .time-countdown--style-product .time-countdown__timer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  
+  .time-countdown--style-product .time-countdown__timer {
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+  
+  .time-countdown--style-product .time-countdown__section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 8rem;
+    min-height: 8.8rem;
+    padding: 0;
+    border-radius: var(--buttons-border-radius);
+    background: var(--time-countdown-background-value);
+    border: 0.1rem solid var(--time-countdown-border-color-value);
+    color: rgb(var(--time-countdown-text));
+  }
+
+  @media screen and (max-width: 992px) {
+    .product .time-countdown--style-product .time-countdown__section {
+      max-width: 100%;
+    }
+  }
+  
+  .time-countdown--style-product .time-countdown__time {
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+    font-weight: var(--font-heading-weight);
+    letter-spacing: 0;
+    color: rgb(var(--time-countdown-text));
+    font-size: calc(var(--font-heading-scale) * 2.1rem);
+    line-height: calc(1 + 0.285714285714286 / max(1, var(--font-heading-scale)));
+  }
+  
+  .time-countdown--style-product .time-countdown__break {
+    display: none;
+  }
+  
+  .center :is(.product__time-countdown, .time-countdown--style-product, .time-countdown__timer) {
+    justify-content: center;
+  }
+  
+  @media screen and (max-width: 576px) {
+    .mobile-center :is(.product__time-countdown, .time-countdown--style-product, .time-countdown__timer) {
+      justify-content: center;
+    }
+  }
+  

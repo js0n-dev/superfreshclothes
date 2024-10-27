@@ -1,0 +1,135 @@
+<div class="heading-text"> 
+  {{ section.settings.richtext_0 }} 
+</div>
+<!-- Image with modal trigger -->
+<a onclick="openModal()">
+  {{ section.settings.image_1 | img_url: 'master' | img_tag }}
+</a>
+
+<!-- Modal Structure -->
+<div id="imageModal" class="modal">
+  <span class="close" onclick="closeModal()">&times;</span>
+<div class="modalbox" style=" background: white;height: 100%;">
+  <div class="inputbox">
+  <div style="text-align: center;">
+    <img src="https://cdn.shopify.com/s/files/1/0262/8631/files/logo_black.png?v=1726243934" height="" width="" style=" width: 100px; ">
+    <h3 style="font-size: 2.7em;font-weight: 700;padding: 0;margin: 0;">SIGN UP : 913</h3>
+    <div id="ps__subscribe-form" style="max-width: 500px; margin: auto; padding: 10px;">
+      <form method="post" action="https://api.postscript.io/subscribe/form" target="dummyframe" onsubmit="document.getElementById('ps__sent-message').style.display = 'block'; document.getElementById('ps__subscribe-form').style.display = 'none';">
+        <input value="15583" type="hidden" name="shop_id" id="ps__shop_id">
+        <input value="429428" type="hidden" name="keyword_id" id="ps__keyword_id">
+         <div style="max-width: 100%;font-size: 13px;margin-bottom: 15px;margin-top: 0px;text-align: justify;line-height: 1.6;font-weight: 600;">*By providing your phone number, you agree to receive recurring automated marketing text messages (e.g. cart reminders) from this shop and third parties acting on its behalf. Consent is not a condition to obtain goods or services. Msg &amp; data rates may apply. Msg frequency varies. Reply HELP for help and STOP to cancel. You also agree to the <a href="https://superfreshclothes.myshopify.com/policies/terms-of-service">Terms of Service</a> and <a href="https://superfreshclothes.myshopify.com/policies/privacy-policy">Privacy Policy</a>. </div>
+       
+        <div style="margin-bottom: 10px; text-align: center;">
+          <input style="width: 100%; padding: 0.75em; font-size: 1.5em;" placeholder="Phone Number" type="phone" name="phone" id="ps__phone-subscribe" autofocus="">
+        </div>
+        <div>
+          <!-- <input style="width: 100%;padding: 0.75em;font-size: 1.5em;border-radius: 0;height: 60px;" class="btn" value="Subscribe" type="submit"> -->
+          <button style="width: 100%; padding: 0.75em; font-size: 1.5em; border-radius: 0; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;background-color: black;cursor: pointer;min-height: 42px;line-height: 1.2;    font-family: Oswald;font-weight: normal;text-transform: uppercase;letter-spacing: 1px;" class="btn" type="submit">
+            <span style="font-size: 1.2em;color: white;">ADD ME</span>
+            <span style="font-size: 0.55em;color: white;">to the private drop list</span>
+        </button>
+
+
+        </div>
+      </form>
+    </div>
+    <div id="ps__sent-message" style="max-width: 400px; margin: auto; padding: 20px; display: none;">
+      <h4>Thanks for subscribing! We'll send you a message shortly.</h4>
+    </div>
+  </div>
+    <iframe id="ps__dummyframe" name="dummyframe" border="0" height="0" width="0"></iframe>
+  </div>
+</div>
+</div>
+
+<!-- Styles for the modal -->
+<style>
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 60px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: white; /* Black w/ opacity */
+  }
+
+  .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+  }
+
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .heading-text{
+    text-align: center;
+    margin: auto 442px auto;
+  }
+  button.btn:hover {
+    background-color: #333333;
+}
+  @media screen and (max-width: 600px){
+      .heading-text{
+    text-align: center;
+    margin: auto;
+  }
+  }
+</style>
+
+<!-- JavaScript for Modal Functionality -->
+<script>
+  function openModal() {
+    document.getElementById("imageModal").style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("imageModal").style.display = "none";
+  }
+
+  // Close modal if user clicks outside the image
+  window.onclick = function(event) {
+    const modal = document.getElementById("imageModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Popup Section",
+  "settings": [
+    {
+      "type": "richtext",
+      "label": "Heading",
+      "id": "richtext_0"
+    },
+    {
+"type": "image_picker",
+"id": "image_1",
+"label": "Image"
+}
+  ],
+  "presets": [
+    {
+      "name": "Popup",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+

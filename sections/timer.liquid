@@ -1,0 +1,123 @@
+
+
+
+<center><p><b> {{ section.settings.header }}</b></p></center>
+{% assign end-date = section.settings.end-time %} 
+<div id="countdown-timer">
+  <div class="timer_container"><span id="days" class="time_no">00</span> <span class="time_text">DAY</span></div>
+  <span class="time_divider">:</span>
+  <div class="timer_container"><span id="hours" class="time_no">00</span> <span class="time_text">HOURS</span></div>
+  <span class="time_divider">:</span>
+  <div class="timer_container"><span id="minutes" class="time_no">00</span> <span class="time_text">MINS</span></div>
+  <span class="time_divider">:</span>
+  <div class="timer_container"><span id="seconds" class="time_no">00</span> <span class="time_text">SECS</span></div>
+</div>
+
+<div id="after-countdown" style="display:none; text-align:center;">
+  {{ section.settings.end-text }}
+</div>
+<style>
+  #countdown-timer{
+  margin-top:10px;
+}
+  <style>
+.countdown{
+    width: 100%;
+    margin-top: 10rem;
+  }
+  #countdown-timer {
+     display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    line-height: 1;
+    /* color: #ffffff; */
+  }
+  
+  #countdown-timer span {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  
+  .timer_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  span.time_text {
+      font-size: 10px;
+  }
+  
+  .time_no,
+  span.time_divider {
+      font-size: 2em;
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var endDate = "{{ end-date }}"; 
+    var countdownDate = new Date(endDate).getTime();
+
+    function updateCountdown() {
+      var now = new Date().getTime();
+      var timeLeft = countdownDate - now;
+
+      if (timeLeft <= 0) {
+        document.getElementById("countdown-timer").style.display = "none";
+        document.getElementById("after-countdown").style.display = "block";
+        return;
+      }
+
+      var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Timer",
+  "class": "timer",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "header",
+      "default": "<p>Site Opens in:</p>",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "end-time",
+      "default": "January 01, 2024 00:00:00",
+      "label": "Countdown Timer",
+      "info": "Format: Month Day, Year HH:MM:SS"
+    },
+    {
+      "type": "richtext",
+      "id": "end-text",
+      "default": "<p>913 Drop is live. <br>Click the image below and we’ll text you the private password.</p>",
+      "label": "After Countdown Text"
+    },
+  ],
+  "presets": [
+    {
+      "name": "Timer"
+    }
+  ]
+}
+{% endschema %}
+
+

@@ -1,0 +1,42 @@
+{%- if settings.enable_free_shipping -%}
+    {%- if settings.free_shipping_limit != blank and settings.free_shipping_limit contains '|' -%}
+        {%- assign limit_split = settings.free_shipping_limit | split: '|' -%}
+        {%- if shop.enabled_currencies.size > 1 -%}
+            {%- for currency in shop.enabled_currencies -%}
+                {%- if currency == cart.currency -%}
+                    {%- assign limit = limit_split[forloop.index0] -%}
+                    {%- break -%}
+                {%- endif -%}
+            {%- endfor -%}
+        {%- else -%}
+            {%- assign limit = limit_split[0] -%}
+        {%- endif -%}
+    {%- else -%}
+        {%- assign limit = settings.free_shipping_limit | default: 0 -%}
+    {%- endif -%}
+    {%- assign left_to_spend = limit | minus: cart.total_price | at_least: 0 -%}
+    <free-shipping class="free-shipping{% unless left_to_spend > 0 %} free-shipping--completed{% endunless %} {{ class }}">
+        <div class="free-shipping__info-wrapper">
+            {% render 'icon-truck' %}
+            <span class="free-shipping__info">
+                {%- if left_to_spend > 0 -%}
+                    {%- assign left_to_spend_money = left_to_spend | money -%}
+                    {{ 'general.cart.free_shipping_html' | t: value: left_to_spend_money }}
+                {%- else -%}
+                    {{ 'general.cart.free_shipping_complete_html' | t }}
+                {%- endif -%}
+            </span>
+        </div>
+        <div class="free-shipping__status">
+            <div class="free-shipping__range">
+                {%- assign range_quotient = limit | times: 1.0 | divided_by: 100 -%}
+                {%- assign range_procent = cart.total_price | divided_by: range_quotient | at_most: 100 -%}
+                <div class="free-shipping__progress-bar" style="width: {{ range_procent }}%;"></div>
+            </div>
+            <div class="free-shipping__total-price">{{ cart.total_price | money }}</div>
+        </div>
+        <script>
+            window.freeShippingLimit = {{ limit | json }};
+        </script>
+    </free-shipping>
+{%- endif -%}

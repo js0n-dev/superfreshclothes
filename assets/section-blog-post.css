@@ -1,0 +1,237 @@
+.article-template__hero-container {
+  max-width: 130rem;
+  margin: 0 auto;
+}
+
+.article-template__hero-container img {
+  border-radius: var(--images-border-radius);
+}
+
+@media screen and (min-width: 1320px) {
+  .article-template__hero-container:first-child {
+    margin-top: 6rem;
+  }
+}
+
+.article-template__hero-small {
+  height: 11rem;
+}
+
+.article-template__hero-medium {
+  height: 22rem;
+}
+
+.article-template__hero-large {
+  height: 33rem;
+}
+
+@media screen and (min-width: 577px) and (max-width: 992px) {
+  .article-template__hero-small {
+    height: 22rem;
+  }
+
+  .article-template__hero-medium {
+    height: 44rem;
+  }
+
+  .article-template__hero-large {
+    height: 66rem;
+  }
+}
+
+@media screen and (min-width: 993px) {
+  .article-template__hero-small {
+    height: 27.5rem;
+  }
+
+  .article-template__hero-medium {
+    height: 55rem;
+  }
+
+  .article-template__hero-large {
+    height: 82.5rem;
+  }
+}
+
+.article-template header {
+  margin-bottom: 4rem;
+}
+
+.article-template__title {
+  margin: 0;
+}
+
+.article-template__title:not(:only-child) {
+  margin-bottom: 2rem;
+}
+
+.article-template__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.article-template__link .icon {
+  margin: 0;
+  transform: rotate(180deg);
+}
+
+.article-template__content {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+}
+
+.article-template__content :is(p, ul, ol, h1, h2, h3, h4, h5, h6, img) {
+  margin: 2rem 0;
+}
+
+.article-template__content :is(h1, h2, h3, h4, h5, h6) {
+  text-transform: var(--headings-case);
+}
+
+.article-template__content table,
+.article-template__content blockquote {
+  margin: 4rem 0;
+}
+
+.article-template__content table {
+  box-shadow: none;
+}
+
+.article-template__content table:not([class]) td, 
+.article-template__content table:not([class]) th {
+  border: none;
+}
+
+.article-template__content table:not([class]) th, 
+.article-template__content table:not([class]) td {
+  padding: 0.4rem 0;
+}
+
+.article-template__content table:not([class]) tr:first-child td {
+  padding-top: 0;
+}
+
+.article-template__content table:not([class]) tr:last-child td {
+  padding-bottom: 0;
+}
+
+.article-template__content table:not([class]) td:not(:last-child) {
+  padding-right: 2rem;
+}
+
+.article-template__content table:not([class]) td:first-child {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  text-transform: var(--headings-case);
+}
+
+.article-template__content img {
+  width: 100%;
+  height: auto;
+}
+
+.article-template__social-sharing {
+  margin-top: 4rem;
+}
+
+.article-template__social-sharing + header,
+.article-template__social-sharing + .article-template__content {
+  margin-top: 2rem;
+}
+
+.article-template__comment-wrapper {
+  margin-top: 6rem;
+}
+
+@media screen and (min-width: 577px) {
+  .article-template__comment-wrapper {
+    margin-top: 8rem;
+  }
+}
+
+.article-template__comment-wrapper h2 {
+  margin-top: 0;
+}
+
+.article-template__comments {
+  margin-bottom: 8rem;
+}
+
+.article-template__comments-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.article-template__comments-fields + .button {
+  margin-top: 3rem;
+}
+
+.article-template__comments-comment {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 4rem;
+  color: rgba(var(--color-foreground), 0.75);
+  background-color: rgb(var(--color-background));
+}
+
+.article-template__comments-comment:not(:first-child) {
+  padding-top: 4rem;
+  border-top: 0.1rem solid rgba(var(--clr-line), var(--clr-line-alpha));
+}
+
+@media screen and (min-width: 577px) {
+  .article-template__comments-comment {
+  }
+}
+
+.article-template__comments-comment p {
+  margin: 1rem 0 0;
+}
+
+.article-template__comments-comment footer {
+  font-size: 1.2rem;
+  line-height: calc(1 + 0.33333333 / var(--font-body-scale));
+  order: -1;
+}
+
+.article-template__comment-fields > * {
+  margin-bottom: 4rem;
+}
+
+@media screen and (min-width: 577px) {
+  .article-template__comment-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 4rem;
+  }
+}
+
+.article-template__comment-warning {
+  margin: 2rem 0 2.5rem;
+}
+
+@media screen and (min-width: 993px) {
+  .article-template__comments .pagination-wrapper {
+    margin: 5rem 0 8rem;
+  }
+}
+
+.article-template .field__icon {
+  color: rgb(var(--clr-icon));
+}
+
+.field textarea + .form__label {
+  font-weight: var(--font-body-weight);
+}
+
+.article-template__comment-wrapper form,
+.article-template__comments-wrapper {
+  padding-top: 8rem;
+}
+
+#comments h2 {
+  margin-bottom: 4rem;
+}

@@ -1,0 +1,141 @@
+{%- for block in section.blocks -%}
+    {%- if block.settings.link_title == blank -%}
+        {%- continue -%}
+    {%- else -%}
+        {% capture link_title_join %}{{ link.title }}{% if childlink != blank %}+{{ childlink.title }}{% endif %}{% endcapture %}
+        {%- if block.settings.link_title != link_title_join -%}
+            {%- continue -%}
+        {%- endif -%}
+    {%- endif -%}
+    {%- case block.type -%}
+        {%- when 'image_with_button' -%}
+            {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+            <li class="menu-drawer__promo-item">
+                {%- style -%}
+                    {%- assign image_aspect_ratio = block.settings.image.aspect_ratio | default: 0.66 -%}
+                    {% capture image_aspect_ratio %}{{ 1 | divided_by: image_aspect_ratio | times: 100 }}%{% endcapture %}
+                    .menu-drawer__image-with-button[data-block-id="{{ block.id }}"] .media::before {
+                    padding-bottom: {{ image_aspect_ratio }};
+                    content: '';
+                    display: block;
+                    }
+                {%- endstyle -%}
+                <div class="menu-drawer__image-with-button" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                    <div class="image-with-button">
+                        <div class="image-with-button__media">
+                        {%- if block.settings.link != blank -%}
+                            <a href="{{ block.settings.link }}">
+                        {%- endif -%}
+                        <div class="media{% if block.settings.image == blank %} placeholder{% endif %}">
+                            {%- if block.settings.image != blank -%}
+                            <img
+                                srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                                {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                                {{ block.settings.image | img_url: 'master' }} {{ block.settings.image.width }}w"
+                                src="{{ block.settings.image | img_url: '1500x' }}"
+                                loading="lazy"
+                                alt="{{ block.settings.image.alt | escape }}"
+                                width="{{ block.settings.image.width }}"
+                                height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio }}"
+                                style="object-position: {{ block.settings.image.presentation.focal_point }};"
+                            >
+                            {%- else -%}
+                            <div class="placeholder media">
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                            {%- endif -%}
+                        </div>
+                        {%- if block.settings.link != blank -%}
+                            </a>
+                        {%- endif -%}
+                        </div>
+                        <div class="image-with-button__content">
+                        {%- if block.settings.button_label != blank -%}
+                            {%- if block.settings.button_color.alpha > 0 -%}
+                                {%- style -%}
+                                    .menu-drawer__image-with-button[data-block-id="{{ block.id }}"] .image-with-button__button {
+                                        --color-button: {{ block.settings.button_color.red }}, {{ block.settings.button_color.green }}, {{ block.settings.button_color.blue }};
+                                        {%- if 'primary' contains block.settings.button_style -%}
+                                            --color-button-text: {% render 'color-contrast' with color: block.settings.button_color %};
+                                        {%- endif -%}
+                                    }
+                                {%- endstyle -%}
+                            {%- endif -%}
+                            <a{% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image-with-button__button button button--product-cart">{{ block.settings.button_label | escape }}</a>
+                        {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {%- when 'featured_promotion' -%}
+            {%- assign content_blocks_size = content_blocks_size | plus: 1 -%}
+            <li class="menu-drawer__promo-item">
+                {%- style -%}
+                    {%- assign image_aspect_ratio = block.settings.image.aspect_ratio | default: 0.66 -%}
+                    {% capture image_aspect_ratio %}{{ 1 | divided_by: image_aspect_ratio | times: 100 }}%{% endcapture %}
+                    .menu-drawer__featured-promotion[data-block-id="{{ block.id }}"] .media::before {
+                        padding-bottom: {{ image_aspect_ratio }};
+                        content: '';
+                        display: block;
+                    }
+                {%- endstyle -%}
+                <div class="menu-drawer__featured-promotion" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                    <div class="mega-menu-featured-promotion">
+                        <div class="mega-menu-featured-promotion__media">
+                        {%- if block.settings.link != blank -%}
+                            <a href="{{ block.settings.link }}">
+                        {%- endif -%}
+                        <div class="media{% if block.settings.image == blank %} placeholder{% endif %}">
+                            {%- if block.settings.image != blank -%}
+                            <img
+                                srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | img_url: '375x' }} 375w,{%- endif -%}
+                                {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | img_url: '750x' }} 750w,{%- endif -%}
+                                {{ block.settings.image | img_url: 'master' }} {{ block.settings.image.width }}w"
+                                src="{{ block.settings.image | img_url: '1500x' }}"
+                                loading="lazy"
+                                alt="{{ block.settings.image.alt | escape }}"
+                                width="{{ block.settings.image.width }}"
+                                height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio }}"
+                                style="object-position: {{ block.settings.image.presentation.focal_point }};"
+                            >
+                            {%- else -%}
+                            <div class="placeholder media">
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                            {%- endif -%}
+                        </div>
+                        {%- if block.settings.link != blank -%}
+                            </a>
+                        {%- endif -%}
+                        </div>
+                        <div class="mega-menu-featured-promotion__content">
+                        {%- if block.settings.text != blank -%}
+                            {%- if block.settings.text_color.alpha > 0 -%}
+                            {%- style -%}
+                                .menu-drawer__featured-promotion[data-block-id="{{ block.id }}"] .mega-menu-featured-promotion__text {
+                                --color-foreground: {{ block.settings.text_color.red }}, {{ block.settings.text_color.green }}, {{ block.settings.text_color.blue }};
+                                }
+                            {%- endstyle -%}
+                            {%- endif -%}
+                            <span class="mega-menu-featured-promotion__text h3">{{ block.settings.text }}</span>
+                        {%- endif -%}
+                        {%- if block.settings.button_label != blank -%}
+                            {%- if block.settings.button_color.alpha > 0 -%}
+                                {%- style -%}
+                                    .menu-drawer__featured-promotion[data-block-id="{{ block.id }}"] .mega-menu-featured-promotion__button {
+                                        --color-button: {{ block.settings.button_color.red }}, {{ block.settings.button_color.green }}, {{ block.settings.button_color.blue }};
+                                        {%- if 'primary' contains block.settings.button_style -%}
+                                            --color-button-text: {% render 'color-contrast' with color: block.settings.button_color %};
+                                        {%- endif -%}
+                                    }
+                                {%- endstyle -%}
+                            {%- endif -%}
+                            {%- assign button_link = block.settings.button_link | default: block.settings.link -%}
+                            <a{% if button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ button_link }}"{% endif %} class="mega-menu-featured-promotion__button {% render 'button-class' with button_style: block.settings.button_style %}">{{ block.settings.button_label | escape }}</a>
+                        {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </li>
+    {%- endcase -%}
+{%- endfor -%}

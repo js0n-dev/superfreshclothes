@@ -1,0 +1,17 @@
+{%- if group_gallery -%}
+    {%- for variant in product.variants -%}
+        {%- if variant.image.src == media.src -%}
+            {%- assign option1_name = variant.option1 | handleize | prepend: '[' | append: ']' -%}
+            {% capture madia_option_filter %}{{ option1_name }}{% endcapture %}
+            {%- break -%}
+            
+        {%- endif -%}
+    {%- endfor -%}
+    {%- if madia_option_filter != blank -%}
+        data-option-filter-item data-option-filter="{{ madia_option_filter }}"
+    {%- elsif last_attr != blank -%}
+        {{ last_attr }}
+    {%- else -%}
+        data-option-filter-item 
+    {%- endif -%}
+{%- endif -%}

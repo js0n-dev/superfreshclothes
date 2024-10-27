@@ -1,0 +1,345 @@
+{%- assign show_quick_add = settings.enable_quick_view -%}
+
+<link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-card.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
+
+<script src="{{ 'time-countdown.js' | asset_url }}" defer="defer"></script>
+
+{%- if show_quick_add -%}
+  {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- style -%}
+  {% render 'section-padding', section: section %}
+  {%- if section.settings.title_color.alpha > 0 -%}
+    #ProductRecommendationsSection-{{ section.id }} .heading-wrapper__heading .title {
+      color: rgb({{ section.settings.title_color.red }}, {{ section.settings.title_color.green }}, {{ section.settings.title_color.blue }});
+    }
+  {%- endif -%}
+
+  .product-recommendations .heading-wrapper {
+    margin-bottom: 2rem;
+  }
+{%- endstyle -%}
+
+<div id="ProductRecommendationsSection-{{ section.id }}">
+  {%- if section.settings.dividing_line == 'top' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+  <product-recommendations class="product-recommendations featured-collection collection d-block section-{{ section.id }}-padding page-width" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4">
+    <slider-component class="slider-mobile-gutter">  
+      <div class="grid-bs">
+        {% if recommendations.performed and recommendations.products_count > 0 %}
+          {% include 'section-heading-capture', items_size: recommendations.products.size %}
+
+          <ul class="g-col-12 grid-bs list-unstyled{% if section.settings.swipe_on_mobile %} slider slider--mobile slider--two-in-row grid--peek{% endif %}" role="list">
+            {% include 'section-heading-column' %}
+
+            {% for recommendation in recommendations.products limit: section.settings.products_to_show %}
+              {%- comment %}<locksmith:04f0>{% endcomment -%}
+                {%- capture var %}{% render 'locksmith-variables', scope: 'subject', subject: recommendation, subject_parent: recommendations, variable: 'transparent' %}{% endcapture %}{% if var == "true" %}{% else %}{% continue %}{% endif -%}
+              {%- comment %}</locksmith:04f0>{% endcomment -%}
+              <li class="g-col-6 g-col-sm-{% if section.settings.products_in_row == '6' %}4{% else %}6{% endif %} g-col-md-{{ 12 | divided_by: section.settings.products_in_row }} slider__slide">
+                {% include 'product-card',
+                  product_card_product: recommendation,
+                  media_size: section.settings.image_ratio,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  add_image_padding: section.settings.add_image_padding,
+                  show_vendor: section.settings.show_vendor,
+                  show_image_outline: section.settings.show_image_outline,
+                  show_rating: section.settings.show_rating
+                %}
+              </li>
+            {% endfor %}
+          </ul>
+          {%- if section.settings.swipe_on_mobile and section.settings.products_to_show > 2 -%}
+            <div class="g-col-12 hidden">
+              <div class="slider-buttons no-js-hidden{% if recommendations.products.size < 4 %} medium-hide{% endif %}{% if recommendations.products.size < 3 %} small-hide{% endif %}">
+                <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'accessibility.previous_slide' | t }}">{% render 'icon-caret' %}</button>
+                <div class="slider-counter caption">
+                  <span class="slider-counter--current">1</span>
+                  <span aria-hidden="true"> / </span>
+                  <span class="visually-hidden">{{ 'accessibility.of' | t }}</span>
+                  <span class="slider-counter--total">{{ products_to_display }}</span>
+                </div>
+                <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'accessibility.next_slide' | t }}">{% render 'icon-caret' %}</button>
+              </div>
+            </div>
+            <div class="g-col-12 medium-hide large-up-hide">
+              {%- assign bullets_size = section.settings.products_to_show | divided_by: 2 -%}
+              {%- if section.settings.collection != blank -%}
+                {%- assign bullets_size = section.settings.products_to_show -%}
+                {%- if recommendations.products.size < bullets_size -%}
+                  {%- assign bullets_size = recommendations.products.size -%}
+                {%- endif -%}
+                {%- assign bullets_size = bullets_size | divided_by: 2 -%}
+              {%- endif -%}
+              <div class="slider-bullets">
+                {%- for bullet in (1..bullets_size) -%}
+                  <button type="button" class="slider-bullet" name="bullet" aria-label="Slide {{ forloop.index }}"></button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {% endif %}
+      </div>
+    </slider-component>
+  </product-recommendations>
+  {%- if section.settings.dividing_line == 'bottom' -%}
+  <div class="page-width">
+    <div class="dividing-line"></div>
+  </div>
+{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.product-recommendations.name",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.product-recommendations.settings.paragraph__1.content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "You may also like",
+      "label": "t:sections.product-recommendations.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.product-recommendations.settings.title_size.options__1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.product-recommendations.settings.title_size.options__2.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.product-recommendations.settings.title_size.options__3.label"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.product-recommendations.settings.title_size.label"    
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "t:sections.product-recommendations.settings.title_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.product-recommendations.settings.header__1.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "in-grid-heading",
+          "label": "t:sections.product-recommendations.settings.layout.options__1.label"
+        },
+        {
+          "value": "heading-on-top",
+          "label": "t:sections.product-recommendations.settings.layout.options__2.label"
+        },
+        {
+          "value": "heading-on-top-center",
+          "label": "t:sections.product-recommendations.settings.layout.options__3.label"
+        }
+      ],
+      "default": "heading-on-top",
+      "label": "t:sections.product-recommendations.settings.layout.label"
+    },
+    {
+      "type": "select",
+      "id": "layout_mobile_align",
+      "options": [
+        {
+          "value": "auto",
+          "label": "t:sections.global.layout_mobile_align.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.global.layout_mobile_align.options__2.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.global.layout_mobile_align.options__3.label"
+        }
+      ],
+      "default": "auto",
+      "label": "t:sections.global.layout_mobile_align.label"
+    },
+    {
+    "type": "select",
+    "id": "dividing_line",
+    "options": [
+      {
+        "value": "none",
+        "label": "t:sections.all.dividing_line.options__1.label"
+      },
+      {
+        "value": "top",
+        "label": "t:sections.all.dividing_line.options__2.label"
+      },
+      {
+        "value": "bottom",
+        "label": "t:sections.all.dividing_line.options__3.label"
+      }
+    ],
+    
+    
+      "default": "top",
+    
+    "label": "t:sections.all.dividing_line.label"
+},
+{
+    "type": "range",
+    "id": "spacing_top",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_top.label",
+    
+    
+      "default": 80
+    
+},
+{
+    "type": "range",
+    "id": "spacing_bottom",
+    "min": 0,
+    "max": 100,
+    "step": 20,
+    "unit": "px",
+    "label": "t:sections.all.spacing_bottom.label",
+    
+    
+      "default": 80
+    
+},
+    {
+      "type": "header",
+      "content": "t:sections.product-recommendations.settings.header__2.content"
+    },
+    {
+      "type": "select",
+      "id": "products_in_row",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.product-recommendations.settings.products_in_row.options__1.label"
+        },
+        {
+          "value": "4",
+          "label": "t:sections.product-recommendations.settings.products_in_row.options__2.label"
+        },
+        {
+          "value": "6",
+          "label": "t:sections.product-recommendations.settings.products_in_row.options__3.label"
+        }
+      ],
+      "default": "4",
+      "label": "t:sections.product-recommendations.settings.products_in_row.label"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.product-recommendations.settings.products_to_show.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": false,
+      "label": "t:sections.product-recommendations.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.product-recommendations.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.product-recommendations.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.product-recommendations.settings.image_ratio.options__3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.product-recommendations.settings.image_ratio.options__4.label"
+        },
+        {
+          "value": "circle",
+          "label": "t:sections.product-recommendations.settings.image_ratio.options__5.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.product-recommendations.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "information_align",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:sections.product-recommendations.settings.information_align.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.product-recommendations.settings.information_align.options__2.label"
+        },
+        {
+          "value": "end",
+          "label": "t:sections.product-recommendations.settings.information_align.options__3.label"
+        }
+      ],
+      "default": "start",
+      "label": "t:sections.product-recommendations.settings.information_align.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.product-recommendations.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_image_padding",
+      "default": false,
+      "label": "t:sections.product-recommendations.settings.add_image_padding.label"
+    },
+    
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.product-recommendations.settings.show_vendor.label"
+    }
+    
+  ]
+}
+{% endschema %}

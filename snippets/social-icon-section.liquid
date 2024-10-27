@@ -1,0 +1,39 @@
+<style>
+  .container {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    border-radius: 5px;
+    justify-content: center;
+    justify-items: center;
+    width: 550px;
+    margin: auto;
+    transition: all 0.3s ease-in-out;margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .container img {
+    transition: transform 0.3s ease-in-out;
+    border-radius: 5px;
+  }
+
+  .container img:hover {
+    transform: scale(1.1); /* Scale the image on hover */
+  }
+
+  @media screen and (max-width: 767px) {
+    .container {
+      width: 60%;
+    }
+     .container img {
+        width: 35px;
+     }
+  }
+</style>
+
+<div class="container">
+  <div><a href=""><img src="https://cdn.shopify.com/s/files/1/0829/6749/4934/files/Group_1.png?v=1724679588"></a></div>
+  <div><a href=""><img src="https://cdn.shopify.com/s/files/1/0829/6749/4934/files/Group_2.png?v=1724679588"></a></div>
+  <div><a href=""><img src="https://cdn.shopify.com/s/files/1/0829/6749/4934/files/Group_3.png?v=1724679588"></a></div>
+  <div><a href=""><img src="https://cdn.shopify.com/s/files/1/0829/6749/4934/files/Group_4_1.png?v=1724679588"></a></div>
+</div>

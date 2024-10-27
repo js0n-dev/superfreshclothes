@@ -1,0 +1,78 @@
+<div class="subscribe-section">
+  <h2>{{ section.settings.text-box }}</h2>
+
+  <div class="button-subs">
+    <a href="{{ section.settings.link-desk }}" class="btn-desk">
+      {{ section.settings.linktext }}
+    </a>
+    <a href="{{ section.settings.link-mob }}" class="btn-mob">
+      {{ section.settings.linktext }}
+    </a>
+  </div>
+</div>
+<style>
+  .subscribe-section{
+    text-align: center;
+    margin-bottom: 100px;
+  }
+  .button-subs a{
+    background-color: black;
+    color: white;
+    padding: 20px;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .button-subs{
+      margin-top: 50px;
+  }
+  
+  .btn-desk{display:block;
+    width: 200px;
+    text-align: center;
+    margin: auto;}
+  
+  .btn-mob{display:none}
+  @media only screen and (max-width: 600px) {
+  .btn-desk{display:none;}
+  .btn-mob{display:block;
+          width: 200px;
+    text-align: center;
+    margin: auto;}
+}
+</style>
+{% schema %}
+{
+  "name": "Subscribe Button",
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    },
+    {
+      "id": "link-desk",
+      "type": "url",
+      "label": "Desktop Link URL"
+    },
+    {
+      "id": "link-mob",
+      "type": "url",
+      "label": "Mobile Link URL"
+    },
+    {
+      "id": "linktext",
+      "type": "text",
+      "label": "Link text",
+      "default": "Click here"
+    }
+  ]
+  ,
+  "presets": [
+    {
+      "name": "Subscribe Button",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

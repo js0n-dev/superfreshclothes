@@ -1,0 +1,14 @@
+{%- for block in section.blocks -%}
+    {%- if block.settings.link_title == blank -%}
+        {%- continue -%}
+    {%- else -%}
+        {% capture link_title_join %}{{ link.title }}{% if childlink != blank %}+{{ childlink.title }}{% endif %}{% endcapture %}
+        {%- if block.settings.link_title != link_title_join -%}
+            {%- continue -%}
+        {%- endif -%}
+    {%- endif -%}
+    {%- case block.type -%}
+        {%- when 'menu_popup_promotion' -%}
+            
+    {%- endcase -%}
+{%- endfor -%}
